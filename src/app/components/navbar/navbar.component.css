@@ -1,0 +1,307 @@
+/* ── Overlay video de salida ───────────────────────── */
+.exit-video-overlay {
+  position: fixed;
+  inset: 0;
+  background: #f5f4f58b;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exit-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 1.1s ease;
+}
+
+.exit-video.exit-fading {
+  opacity: 0;
+}
+
+/* Iconos expandir/contraer del toggler */
+:host ::ng-deep .navbar-toggler .icon-expanded { display: none; }
+:host ::ng-deep .navbar-toggler[aria-expanded="true"] .icon-collapsed { display: none; }
+:host ::ng-deep .navbar-toggler[aria-expanded="true"] .icon-expanded  { display: inline; }
+
+/* Navbar fijo al hacer scroll y pestaña activa: ver .lg-navbar en assets/styles/liquid-glass.css */
+
+.mat-icon #mat-icon{
+color: purple;}
+
+
+   .efecto-spin {/* Initial state */
+    transition: all 0.2s ease; color: white; }
+
+ .efecto-spin:hover {/* Effect on hover */
+        transform: rotate(20deg) scale(1.25); color: rgb(37, 99, 59);}
+
+
+
+   .efecto-big {/* Initial state */
+    transition: all 0.5s ease; color:rgb(73, 64, 134); }
+
+ .efecto-big:hover {/* Effect on hover */
+        transform: scale(1); font-size: x-large; color:darkolivegreen; }
+
+
+.card {/* horizontal, vertical, blur, color */
+   transition: all 0.4s ease; box-shadow: 5px 5px 2px gray;
+}
+.card:hover{ box-shadow: 10px 10px 5px  rgb(155, 154, 154);}
+
+
+ .neon-shadow {  filter:   drop-shadow(5px 5px 2px rgb(179, 179, 179)) ;    transition: all 0.3s ease-in-out; }
+
+/* Efecto hover: intensificar el brillo */
+.neon-shadow:hover { filter:drop-shadow(5px 5px 3px gray)  drop-shadow(5px 5px 5px rgb(168, 167, 167));  }
+
+/* Menú flotante siempre desplegado en móvil (< lg = 992px) */
+@media (max-width: 991.98px) {
+  /* Botón toggler visible y estilizado */
+  :host ::ng-deep .navbar-toggler {
+    display: block !important;
+    border: 1.5px solid rgba(101, 50, 124, 0.40);
+    border-radius: 10px;
+    padding: 5px 9px;
+    transition: background 0.26s ease;
+  }
+  :host ::ng-deep .navbar-toggler:focus {
+    box-shadow: 0 0 0 3px rgba(101, 50, 124, 0.20);
+  }
+
+  /* Menú flotante con transición suave */
+  :host ::ng-deep .navbar-collapse {
+    position: absolute;
+    top: 60px;
+    width: 50%;
+    left: 10px;
+    right: 0;
+    z-index: 1050;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border: 1px solid rgba(101, 50, 124, 0.15);
+    border-radius: 16px 16px 32px 32px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+    padding: 8px 0 12px;
+    /* Estado base: siempre en DOM, oculto sin show */
+    display: block !important;
+    overflow: hidden !important;
+    transition: opacity 0.15s ease, transform 0.15s ease !important;
+  }
+
+  /* Colapsado (sin .show y sin .collapsing) */
+  :host ::ng-deep .navbar-collapse.collapse:not(.show) {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+  }
+
+  /* Durante la animación de Bootstrap */
+  :host ::ng-deep .navbar-collapse.collapsing {
+    height: auto !important;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  /* Expandido */
+  :host ::ng-deep .navbar-collapse.collapse.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  :host ::ng-deep .navbar-collapse .nav-link {
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 2px 10px;
+  }
+
+  :host ::ng-deep .navbar-collapse .nav-link:hover {
+    background: rgba(101, 50, 124, 0.08);
+  }
+}
+
+
+/* Área segura de iPhone/iPad (reloj, notch, Dynamic Island): la cápsula flotante
+   baja lo que mida el área. En navegador env() vale 0, así que el diseño web no cambia. */
+:host ::ng-deep .navbar.lg-navbar {
+  top: calc(10px + env(safe-area-inset-top));
+  margin-top: calc(10px + env(safe-area-inset-top));
+}
+
+/* ── Teléfono: menú en barra inferior (html.es-telefono lo pone main.ts) ── */
+.brand-telefono, .tabbar-telefono { display: none; }
+
+:host-context(.es-telefono) .brand-telefono {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  letter-spacing: .5px;
+  color: rgb(101, 50, 124);
+}
+:host-context(.es-telefono) .brand-telefono img { height: 28px; }
+
+/* Con el menú abajo, la cápsula superior (solo marca + toggler oculto) queda vacía: se quita */
+:host-context(.es-telefono) ::ng-deep .navbar.lg-navbar { display: none !important; }
+
+:host-context(.es-telefono) ::ng-deep .navbar-toggler,
+:host-context(.es-telefono) ::ng-deep .navbar-collapse { display: none !important; }
+
+:host-context(.es-telefono) .tabbar-telefono {
+  /* Dock estilo macOS: cápsula de cristal flotante, separada de los bordes, con iconos en mosaicos redondeados */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dock-gap, 14px);    /* Android lo ajusta según el ancho (navbar.component.ts) */
+  position: fixed;
+  left: 0; right: 0;
+  margin: 0 auto;                /* centrado; el ancho lo da el contenido */
+  width: max-content;
+  max-width: calc(100% - 16px);
+  bottom: calc(6px + env(safe-area-inset-bottom) * 0.35);
+  z-index: 1048;  /* por encima del panel "Más" */
+  padding: 8px 12px;
+  border-radius: 28px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.10));
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.70);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(255, 255, 255, 0.25), 0 10px 28px rgba(20, 15, 40, 0.22);
+}
+
+.tab {
+  position: relative;
+  flex: 0 1 var(--dock-tile, 46px);
+  min-width: 30px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 14px;           /* mosaico redondeado tipo icono de app */
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.38));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 3px 8px rgba(20, 15, 40, 0.18);
+  color: rgb(73, 64, 134);
+  text-decoration: none;
+  transform-origin: 50% 100%;
+  transition: transform .22s cubic-bezier(0.34, 1.56, 0.64, 1), background .2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.tab i { font-size: var(--dock-icon, 22px); }
+/* la etiqueta no se ve (como en el dock) pero queda para lectores de pantalla */
+.tab span {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+/* al tocar: el icono "salta" y crece como al pasar el cursor por el dock */
+.tab:active { transform: translateY(-8px) scale(1.28); }
+/* punto bajo el icono de la pantalla activa, como el indicador de apps abiertas */
+.tab.activo::after {
+  content: '';
+  position: absolute;
+  bottom: -7px; left: 50%;
+  width: 5px; height: 5px;
+  margin-left: -2.5px;
+  border-radius: 50%;
+  background: rgb(101, 50, 124);
+  box-shadow: 0 0 6px rgba(101, 50, 124, 0.6);
+}
+.tab.activo { background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(214, 226, 236, 0.75)); }
+
+/* Android: el dock queda arriba de la barra de gestos/navegación completa (en iPhone basta un 35 % del indicador) */
+:host-context(.es-android) .tabbar-telefono {
+  bottom: calc(6px + max(env(safe-area-inset-bottom), var(--safe-area-inset-bottom, 0px)));
+}
+:host-context(.es-android) .mas-panel {
+  padding-bottom: calc(94px + max(env(safe-area-inset-bottom), var(--safe-area-inset-bottom, 0px)));
+}
+
+/* iPhone: dock de borde a borde (html.dock-ancho lo pone navbar.component.ts); los mosaicos se reparten el ancho */
+:host-context(.dock-ancho) .tabbar-telefono {
+  left: 6px; right: 6px;
+  margin: 0;
+  width: auto;
+  max-width: none;
+  padding: 10px 10px;
+  justify-content: space-between;
+  border-radius: 30px;
+}
+:host-context(.dock-ancho) .tab { flex: 0 0 var(--dock-tile, 46px); border-radius: 15px; }
+/* iPhone en horizontal: el dock ocupa solo la mitad central del ancho */
+:host-context(.dock-mitad) .tabbar-telefono { left: 25%; right: 25%; }
+
+/* Tableta: mosaicos un poco más grandes; el nombre solo se muestra un momento al tocar (burbuja sobre el icono) */
+:host-context(.es-tablet) .tabbar-telefono { gap: 10px; padding: 8px 14px; }
+:host-context(.es-tablet) .tab { flex: 0 1 56px; min-width: 44px; }
+:host-context(.es-tablet) .tab i { font-size: 24px; }
+:host-context(.es-tablet) .tab.con-etiqueta span {
+  position: absolute;
+  width: auto; height: auto; overflow: visible; clip: auto;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(40, 32, 62, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 12px; font-weight: 500; line-height: 1.2; white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  animation: etiquetaSube .18s ease-out;
+}
+@keyframes etiquetaSube { from { opacity: 0; transform: translate(-50%, 6px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+/* Panel "Más" que sube desde abajo */
+.mas-fondo {
+  position: fixed; inset: 0;
+  z-index: 1046;
+  background: rgba(0, 0, 0, 0.25);
+  animation: masFade .2s ease;
+}
+.mas-panel {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 1047;
+  padding: 8px 14px calc(94px + env(safe-area-inset-bottom) * 0.35);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.15);
+  animation: masSube .25s ease-out;
+}
+.mas-asa { width: 40px; height: 5px; margin: 0 auto 12px; border-radius: 3px; background: rgba(101, 50, 124, 0.3); }
+.mas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mas-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 78px;
+  padding: 8px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 26px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.06));
+  backdrop-filter: blur(8px) saturate(170%);
+  -webkit-backdrop-filter: blur(8px) saturate(170%);
+  color: rgb(73, 64, 134);
+  font-size: 12px;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.mas-item i { font-size: 22px; }
+.mas-item:active { transform: scale(.95); }
+.mas-item.activo { background: rgba(190, 210, 223, 0.45); font-weight: 600; }
+
+@keyframes masSube { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes masFade { from { opacity: 0; } to { opacity: 1; } }

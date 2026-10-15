@@ -1,0 +1,213 @@
+
+
+
+  
+<form (ngSubmit)="onSubmit" [formGroup]="questionForm">
+    <div class="mb-6 alert alert-primary" style=" background-color:rgb(231, 219, 243); border-color:rgb(212, 187, 233);"  >
+        <ng-container *ngIf="objReactivo.tipoReactivo ===1">
+        <!--   <div *ngIf=" questionForm.get('txtQuestion')?.value.length<3 ">
+            <li class="fa fa-battery-quarter fa-sm" style="color:orange" ></li> </div>
+          <div *ngIf="   questionForm.get('txtQuestion')?.value.length>=3 ">
+            <li class="fa fa-battery-full fa-sm" style="color:green" ></li> </div> -->
+        
+        <label [ngClass]="questionForm.get('txtQuestion')?.value.length<3? 'form label alert alert-info':'form label alert alert-success'"
+         for="txtQuestion" > {{ objReactivo.texto }}</label>  
+        <input type="text" formControlName="txtQuestion"  name="txtQuestion" 
+        (change)="onRespuesta(questionForm.get('txtQuestion')?.value, questionForm.invalid )" 
+          id="txtQuestion"   class="form-control" placeholder="responda aquí..." >  
+        <div *ngIf="questionForm.get('txtQuestion')?.touched 
+                    && questionForm.get('txtQuestion')?.errors?.['required'] "
+            class="alert alert-danger d-inline-flex">
+            <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp;Es requerido.
+        </div>    
+        </ng-container>   
+       
+        <ng-container *ngIf="objReactivo.tipoReactivo ===2">
+          <label [ngClass]="questionForm.get('txtQuestion')?.value.length<3? 'form label alert alert-info ': 'form label alert alert-success' "
+          for="txtQuestion" > {{ objReactivo.texto }}</label>  
+            <textarea  formControlName="txtQuestion"  name="txtQuestion" 
+            (change)="onRespuesta(questionForm.get('txtQuestion')?.value, questionForm.invalid )" 
+              id="txtQuestion" rows="3"   class="form-control" placeholder="responda aquí...">
+            </textarea>
+            <div *ngIf="questionForm.get('txtQuestion')?.touched 
+                        && questionForm.get('txtQuestion')?.errors?.['required'] "
+                class="alert alert-danger d-inline-flex">
+                <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp;Es requerido.</div>    
+            </ng-container>  
+
+        <ng-container *ngIf="objReactivo.tipoReactivo ===3">
+          <label [ngClass]="questionForm.get('txtQuestion')?.value.length<2? 'form label alert alert-info':'form label alert alert-success' "
+          for="txtQuestion" > {{ objReactivo.texto }}</label>  
+            <input type="date" formControlName="txtQuestion"  name="txtQuestion" 
+            (change)="onRespuesta(questionForm.get('txtQuestion')?.value, questionForm.invalid )" 
+              id="txtQuestion"  class="form-control" placeholder="responda aquí...">
+            <div *ngIf="questionForm.get('txtQuestion')?.touched 
+                        && questionForm.get('txtQuestion')?.errors?.['required'] "
+                class="alert alert-danger d-inline-flex">Es requerido.</div>    
+        </ng-container>  
+        <ng-container *ngIf="objReactivo.tipoReactivo ===4">
+          <label [ngClass]="questionForm.get('txtQuestion')?.value<10? 'form label alert alert-info':'form label alert alert-success' "
+          for="txtQuestion" > {{ objReactivo.texto }}</label>  
+            <input type="number" formControlName="txtQuestion"  name="txtQuestion" 
+            (change)="onRespuesta(questionForm.get('txtQuestion')?.value, questionForm.invalid )" 
+              id="txtQuestion"   class="form-control" placeholder="responda aquí...">
+            <div *ngIf="questionForm.get('txtQuestion')?.touched 
+                        && (questionForm.get('txtQuestion')?.errors?.['required'] ||
+                            questionForm.get('txtQuestion')?.value==''||
+                            questionForm.get('txtQuestion')?.value<10  )"
+                class="alert alert-danger d-inline-flex">
+                <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp;Es requerido y mayor de 10 años.</div> 
+                
+        </ng-container>    
+        <ng-container *ngIf="objReactivo.tipoReactivo ===5">
+          <label [ngClass]="questionForm.get('radioQuestion')?.value.length<2 && objReactivo.respuesta.length<2
+           ? 'form label alert alert-info':'form label alert alert-success' "
+          for="txtQuestion" > {{ objReactivo.texto }} </label>  
+            <div   class="form-check">
+            <input id="radioQuestion1" type="radio" formControlName="radioQuestion"  name="radioQuestion" #radioQuestion1
+            (change)="onRespuesta(questionForm.get('radioQuestion')?.value, questionForm.invalid )" 
+             class="form-check-input" [value]=" obtieneValorIndex(0,objReactivo.textoOpciones)"  >
+            <label class="form-check-label" for="radioQuestion1">{{ obtieneValorIndex(0,objReactivo.textoOpciones) }}</label>
+            </div>
+            <div class="form-check">  
+            <input id="radioQuestion2" type="radio" formControlName="radioQuestion"  name="radioQuestion" #radioQuestion2
+            (change)="onRespuesta(questionForm.get('radioQuestion')?.value, questionForm.invalid )" 
+               class="form-check-input" [value]=" obtieneValorIndex(1,objReactivo.textoOpciones) "   >
+            <label class="form-check-label" for="radioQuestion2">{{ obtieneValorIndex(1,objReactivo.textoOpciones) }}</label>
+            </div>
+            <div *ngIf=" (  questionForm.get('radioQuestion1')?.touched || questionForm.get('radioQuestion2')?.touched  )
+                      && questionForm.get('radioQuestion1')?.errors?.['required'] " 
+                class="alert alert-danger d-inline-flex">
+                <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp;Seleccione algo.</div>    
+        </ng-container>    
+        <ng-container *ngIf="objReactivo.tipoReactivo ===6">
+          <label [ngClass]="(questionForm.get('selectQuestion')?.value.length<2 ||
+          questionForm.get('selectQuestion')?.value=='Seleccione...')  && objReactivo.respuesta.length<2 ? 'form label alert alert-info':'form label alert alert-success' "
+          for="txtQuestion" > {{ objReactivo.texto }}</label>  
+          <select required formControlName="selectQuestion"  name="selectQuestion"  id="selectQuestion" 
+            (change)="onRespuesta(questionForm.get('selectQuestion')?.value, questionForm.invalid );
+                      onFocus(objReactivo.tipoReactivo,questionForm.get('selectQuestion')?.value ); " 
+                 class="form-select form-select-sm">
+                <option >Seleccione...</option>
+                <option *ngFor="let item of onstrOptions(objReactivo.textoOpciones) " 
+                   [selected]="item=== obtieneValorIndex(0,  objReactivo.respuesta )  "
+                    >{{item}}</option>
+           </select> 
+
+           <input type="text" formControlName="txtselectQuestion"  name="txtselectQuestion" #txtselectQuestion
+           *ngIf=" questionForm.get('selectQuestion')?.value =='Otro' || obtieneValorIndex(0,  objReactivo.respuesta ) =='Otro'   "
+           (change)="onRespuesta(questionForm.get('txtselectQuestion')?.value, questionForm.invalid); " 
+             id="txtselectQuestion"   class="form-control" placeholder="especifica...">
+
+          <div class="alert alert-danger d-inline-flex" 
+                *ngIf="questionForm.get('selectQuestion')?.touched && 
+                      (questionForm.get('selectQuestion')?.value=='' || 
+                       questionForm.get('selectQuestion')?.value=='Seleccione...') " >
+                       <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp;Elija una opción.</div>
+          <div class="alert alert-danger d-inline-flex" 
+                *ngIf="questionForm.get('txtselectQuestion')?.touched && 
+                      (questionForm.get('selectQuestion')?.value=='Otro' && 
+                       questionForm.get('txtselectQuestion')?.value=='') " >
+                       <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp;Favor de llenar</div>
+        </ng-container>
+        <ng-container *ngIf="objReactivo.tipoReactivo ===7">
+          <label [ngClass]="questionForm.get('checkQuestion')?.value==false && objReactivo.respuesta!='true'
+          ? 'form label alert alert-info':'form label alert alert-success' "
+          for="txtQuestion" > {{ objReactivo.texto }}</label>  
+          <div   class="form-check">
+            <label class="form-check-label" for="checkQuestion">
+                 {{ objReactivo.textoOpciones }}</label>
+            <input class="form-check-input" type="checkbox" id="checkQuestion" formControlName="checkQuestion" name="checkQuestion"
+            (change)="onRespuesta(questionForm.get('checkQuestion')?.value, questionForm.invalid )" 
+            #checkQuestion >
+           
+            <div  *ngIf="questionForm.get('checkQuestion')?.touched &&
+            objReactivo.isRequired &&  questionForm.get('checkQuestion')?.value==false"
+            class="alert alert-danger d-inline-flex">
+            <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp;Es requerido.</div>
+          </div>
+       </ng-container>
+  
+       <ng-container *ngIf="objReactivo.tipoReactivo ===8">
+        <label [ngClass]=" this.strChkList.length==0 && this.objReactivo.respuesta.length==0 ? 'form label alert alert-info':'form label alert alert-success' "
+        for="txtQuestion" > {{ objReactivo.texto }}</label>
+        
+        <div  *ngFor="let item of onstrOptions(objReactivo.textoOpciones); let i=index;">
+          <input [id]="'chk'+i" name="chkItemQuestion"  formControlName="chkItemQuestion"
+           class="form-check-input" type="checkbox"  
+           [checked]="item===  buscaValorInArray( objReactivo.respuesta, item  )  " checked="true"
+           (click)="onCheckList(item); onFocus(objReactivo.tipoReactivo, item );" > 
+          <li class="fa fa-check fa-sm" style="color: green;" *ngIf=" objReactivo.respuesta.includes( item )"> </li>
+          <label class="form-check-label" [htmlFor]="'chk'+i"  >{{item}}</label>
+        </div>
+
+        <input type="text" formControlName="txtchkListQuestion"  name="txtchkListQuestion" #txtchkListQuest
+          *ngIf="onExistChkOtro()==true || objReactivo.respuesta.includes('Otro:')   "
+        (change)="onRespuesta(questionForm.get('txtchkListQuestion')?.value, questionForm.invalid); " 
+          id="txtchkListQuestion"   class="form-control" placeholder="especifica...">
+
+          <div class="alert alert-danger d-inline-flex"  
+          *ngIf="questionForm.get('chkItemQuestion')?.touched &&
+          objReactivo.isRequired && this.strChkList.length==0 " >
+          <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp; Elija al menos una opción.</div>
+
+          <div class="alert alert-danger d-inline-flex " 
+                *ngIf=" 
+                        (questionForm.get('txtchkListQuestion')?.touched && 
+                       ( onExistChkOtro()==true &&  questionForm.get('txtchkListQuestion')?.value=='') )  "
+                        >
+         <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp;Favor de llenar</div>  
+      </ng-container> 
+      <ng-container *ngIf="objReactivo.tipoReactivo ===9">
+        <label [ngClass]="questionForm.get('txtCelQuestion')?.value.length!=10? 'form label alert alert-info':'form label alert alert-success'"
+         for="txtCelQuestion" > {{ objReactivo.texto }}</label>  
+        <input type="tel" maxlength="10" formControlName="txtCelQuestion"  name="txtCelQuestion" 
+        (change)="onRespuesta(questionForm.get('txtCelQuestion')?.value, questionForm.invalid )" 
+         (keypress)="validarCel($event)"
+          id="txtCelQuestion"   class="form-control" placeholder="cel a 10 dígitos..." >  
+        <div *ngIf="questionForm.get('txtCelQuestion')?.touched 
+                    && questionForm.get('txtCelQuestion')?.errors?.['minlength'] "
+            class="alert alert-danger d-inline-flex">
+            <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp;Deben ser al menos 10 dígitos.
+        </div>     
+        </ng-container>   
+        <ng-container *ngIf="objReactivo.tipoReactivo ===10">
+          <label [ngClass]=" questionForm.get('txtMailQuestion')?.value &&
+          questionForm.get('txtMailQuestion')?.errors?.['pattern']? 'form label alert alert-info':'form label alert alert-success'"
+           for="txtMailQuestion" > {{ objReactivo.texto }}</label>  
+      
+           <input type="email"  formControlName="txtMailQuestion"  name="txtMailQuestion" 
+          (change)="onRespuesta(questionForm.get('txtMailQuestion')?.value, questionForm.invalid )"       
+            id="txtMailQuestion"   class="form-control" placeholder="su email..." >  
+          <div *ngIf="questionForm.get('txtMailQuestion')?.touched 
+                      && questionForm.get('txtMailQuestion')?.errors?.['pattern'] "
+              class="alert alert-danger d-inline-flex">
+              <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp;revise el formato del email.
+          </div>     
+          </ng-container>   
+
+
+          <ng-container *ngIf="objReactivo.tipoReactivo ===11">
+            <label [ngClass]="questionForm.get('txtQuestionCUM')?.value.length<3? 'form label alert alert-info':'form label alert alert-success'"
+             for="txtQuestionCUM" 
+             (click)="onRespuesta(questionForm.get('txtQuestionCUM')?.value, questionForm.invalid ) "
+             > {{ objReactivo.texto }}</label>  &nbsp;&nbsp;
+             <label for="txtQuestionCUM" class="btn btn-success"
+             (click)="onRespuesta(questionForm.get('txtQuestionCUM')?.value, questionForm.invalid ) "
+             >  <li class="fa fa-paper-plane fa-lg"></li>&nbsp;&nbsp; Verificar si Existe</label>  
+
+            <input type="text" formControlName="txtQuestionCUM"  name="txtQuestionCUM" maxlength="10"
+            (change)="onRespuesta(questionForm.get('txtQuestionCUM')?.value, questionForm.invalid )" 
+              id="txtQuestionCUM"   class="form-control" placeholder="Ingrese CUM..." >  
+            <div *ngIf="questionForm.get('txtQuestionCUM')?.touched 
+                        && questionForm.get('txtQuestionCUM')?.errors?.['required'] "
+                class="alert alert-danger d-inline-flex">
+                <li class="fa fa-triangle-exclamation fa-lg"></li>&nbsp;&nbsp;Es requerido.
+            </div>    
+            </ng-container>   
+           
+
+    </div>
+</form>
+<!-- <pre>{{questionForm.value | json}}</pre> -->
+             

@@ -1,0 +1,12 @@
+node_modules
+/instaladores
+
+# Builds y archivos generados
+/dist
+/.angular
+.DS_Store
+/ios/App/build*
+/ios/App/-allowProvisioningUpdates
+/android/app/build
+/android/build
+/android/.gradle

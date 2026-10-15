@@ -1,0 +1,510 @@
+<app-navbar></app-navbar>
+
+
+
+<div class="salud-bg"></div>
+
+
+<div class="row"  [@mostrarTriggerCollapse]="estado">
+    <div class="col-md-12">
+     <div class="text-center"></div>
+     <mat-toolbar color="primary"  style=" background-color:rgb(94, 139, 165);  font-size:x-large; height: 54px;"  >
+          <span>Ficha Salud</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <img class="rounded" src="../../../assets/logoScout.png" width="50" height="50">
+     </mat-toolbar>
+     <br>
+    </div>
+</div>
+
+<div class="mx-3 mt-1 "> <!--  mx=margin left and right, mt=margin top -->
+<div class="row">
+
+    <div class="col-md-12">
+              
+    <app-modo-captura clave="salud" [(modo)]="modoCaptura"></app-modo-captura>
+    <form [formGroup]="formRegistro" (ngSubmit)="getItem()" >
+        <div class="row text-center"  > 
+            <div class="col-md-4"   [@mostrarTrigger]="estado" >
+
+                <div class="campo-escaner">
+        <mat-form-field  style="width:100%;"  [subscriptSizing]="modoCaptura==='camara' ? 'dynamic' : 'fixed'">
+                    <mat-icon matPrefix style="color: purple;" >local_hospital</mat-icon>
+                    <input matInput placeholder="Escanea Pulsera o captura CUM..." type="text" #txtPulsera formControlName="txtPulsera"  maxlength="10"
+                   [readonly]="modoCaptura==='camara'" [attr.inputmode]="modoCaptura==='camara' ? 'none' : null" >
+                     <mat-error *ngIf="formRegistro.get('txtPulsera')?.hasError('minlength')">
+                        <mat-icon>warning_amber</mat-icon> Debe ser un valor válido 
+                     </mat-error> 
+                </mat-form-field>
+        <app-boton-escaner *ngIf="modoCaptura==='camara'" (leido)="alEscanear('txtPulsera', $event)"></app-boton-escaner>
+        </div>
+            </div>
+            <div class="col-12 col-md-4 fila-botones" [@mostrarTriggerLeft]="estado"> 
+                 <button mat-raised-button style="color:white; " color="accent" [disabled]="formRegistro.invalid" type="submit"  >
+            <i class="fas fa-stethoscope efecto-spin" ></i>&nbsp;Consultar</button> 
+                    <button mat-raised-button color="basic"      
+                   style="color: rgb(253, 250, 253); background-color:#b76e2e96;" (click)="cleanForm()" >
+                  <i class="fa fa-broom efecto-slide" ></i>&nbsp;Limpiar</button>    
+            </div>
+
+        </div>  
+
+     
+        <mat-accordion [hidden]="this.saludGral.cum==''"  [@triggResult]="this.saludGral.cum!=''"    >          
+           <mat-expansion-panel [expanded]="panelOpenState===false" (opened)="panelOpenState = false" (closed)="panelOpenState = true" >
+            <mat-expansion-panel-header style="background-color: rgb(217, 237, 248);" >
+              <mat-panel-title><mat-icon>local_hospital</mat-icon>Datos de Salud </mat-panel-title>
+              <mat-panel-description>Información del Asistente&nbsp;&nbsp;
+                <img *ngIf="saludGral.cum.length>0" [src]="imagePath" class="img-thumbnail rounded" width="60" height="60" >         
+              </mat-panel-description>
+            </mat-expansion-panel-header><br>
+
+      
+        <div class="row text-center"  > 
+            <div class="col-md-3" > 
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">CUM</span>
+                        <label type="text" class="form-control" placeholder="cum" aria-describedby="basic-addon1">
+                            {{saludGral.cum}}
+                        </label>
+                    </div>
+            </div>
+            <div class="col-md-6" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Nombre</span>
+                    <label type="text" class="form-control" placeholder="nombre" aria-describedby="basic-addon1">
+                        {{saludGral.nombre}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Tipo Sangre</span>
+                    <label type="text" class="form-control" placeholder="tiposangre" aria-describedby="basic-addon1">
+                        {{saludGral.tipoSangre}}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row text-center"  > 
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Peso</span>
+                    <label type="text" class="form-control" placeholder="peso" aria-describedby="basic-addon1">
+                        {{saludGral.peso}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Estatura</span>
+                    <label type="text" class="form-control" placeholder="estatura" aria-describedby="basic-addon1">
+                        {{saludGral.estatura}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-2" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Edad</span>
+                    <label type="text" class="form-control" placeholder="edad" aria-describedby="basic-addon1">
+                        {{saludGral.edad}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-2" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">IMC</span>
+                    <label type="text" class="form-control" placeholder="imc" aria-describedby="basic-addon1">
+                        {{saludGral.imc}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-2" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">FactorRH</span>
+                    <label type="text" class="form-control" placeholder="factorRH" aria-describedby="basic-addon1">
+                        {{saludGral.factorRH==true?'+':'-'}}
+                    </label>
+                </div>
+            </div>     
+        </div>
+       
+        <div class="row text-center"  > 
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">IMSS</span>
+                    <label type="text" class="form-control" placeholder="imss" aria-describedby="basic-addon1">
+                        {{saludGral.imss}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">ISSSTE</span>
+                    <label type="text" class="form-control" placeholder="issste" aria-describedby="basic-addon1">
+                        {{saludGral.issste}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">ISSEMyM</span>
+                    <label type="text" class="form-control" placeholder="isseMyM" aria-describedby="basic-addon1">
+                        {{saludGral.isseMyM}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">ISSFAM</span>
+                    <label type="text" class="form-control" placeholder="issfam" aria-describedby="basic-addon1">
+                        {{saludGral.issfam}}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row text-center"  > 
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Seg.Polular</span>
+                    <label type="text" class="form-control" placeholder="seguroPopular" aria-describedby="basic-addon1">
+                        {{saludGral.seguroPopular}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">PEMEX</span>
+                    <label type="text" class="form-control" placeholder="pemex" aria-describedby="basic-addon1">
+                        {{saludGral.pemex}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">SEDENA</span>
+                    <label type="text" class="form-control" placeholder="sedena" aria-describedby="basic-addon1">
+                        {{saludGral.sedena}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Aseg.Particular</span>
+                    <label type="text" class="form-control" placeholder="aseguradoraParticular" aria-describedby="basic-addon1">
+                        {{saludGral.aseguradoraParticular}}
+                    </label>
+                </div>
+            </div>
+        </div>
+       
+        <div class="row text-center"  > 
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Num.Aseg.Part</span>
+                    <label type="text" class="form-control" placeholder="numasegpart" aria-describedby="basic-addon1">
+                        {{saludGral.numeroAseguradoraParticular}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">TipoSeguro</span>
+                    <label type="text" class="form-control" placeholder="tiposeguro" aria-describedby="basic-addon1">
+                        {{saludGral.tipoSeguro}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Otro Seg.Med.</span>
+                    <label type="text" class="form-control" placeholder="otrosegmed" aria-describedby="basic-addon1">
+                        {{saludGral.otroSeguroMedico}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-3" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Núm.Seg.</span>
+                    <label type="text" class="form-control" placeholder="numeroseguro" aria-describedby="basic-addon1">
+                        {{saludGral.numeroSeguro}}
+                    </label>
+                </div>
+            </div>
+        </div>
+       
+        <div class="row text-center"  > 
+            <div class="col-md-6" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Alergias</span>
+                    <label type="text" class="form-control" placeholder="alergias" aria-describedby="basic-addon1">
+                        {{saludGral.detalleAlergias}}
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6" > 
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Reacc.Alérgicas</span>
+                    <label type="text" class="form-control" placeholder="reaccionAlergica" aria-describedby="basic-addon1">
+                        {{saludGral.reaccionAlergica}}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+      <table *ngIf="this.listPadecimientos" class="table table-sm table-striped table-hover"  style="width:80%">
+        <tbody>
+           <tr><th>Padecimiento(s):</th></tr>
+           <tr *ngFor="let item of  listPadecimientos ">
+               <td>  <label  *ngIf="listPadecimientos.length>0" style="font-size: small;" >{{item.padecimiento}}  </label></td>
+           </tr> 
+        </tbody>
+     </table> 
+     <div class="row text-center"  > 
+        <div class="col-md-6" > 
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Tratamieto Med.</span>
+                <label type="text" class="form-control" placeholder="tratamientoMedico" aria-describedby="basic-addon1">
+                    {{saludGral.tratamientoMedico}}
+                </label>
+            </div>
+        </div>
+     </div>
+    
+    <table *ngIf="this.listPadecimientosPsy" class="table table-sm table-striped table-hover"  style="width:80%">
+        <tbody>
+           <tr><th>Padecimientos Psicológicos:</th></tr>
+           <tr *ngFor="let item of  listPadecimientosPsy ">
+               <td>  <label  *ngIf="listPadecimientos.length>0" style="font-size: small;" >{{item.padecimientoPsy}}  </label></td>
+           </tr> 
+        </tbody>
+     </table> 
+     <div class="row text-center"  > 
+        <div class="col-md-6" > 
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Tratamieto Med/Psico</span>
+                <label type="text" class="form-control" placeholder="tratampsicologico" aria-describedby="basic-addon1">
+                    {{saludGral.tratamientoMedicoPsicologico}}
+                </label>
+            </div>
+        </div>
+     </div>
+   
+    <table *ngIf="this.listVacunas" class="table table-sm table-striped table-hover"  style="width:80%">
+        <tbody>
+           <tr><th>Vacunas(s):</th><th>Fecha</th></tr>
+           <tr *ngFor="let item of  listVacunas ">
+               <td>  <label  *ngIf="listVacunas.length>0" style="font-size: small;" >{{item.vacuna}}  </label></td>
+               <td>  <label  *ngIf="listVacunas.length>0" style="font-size: small;" >
+                {{ formatoFecha(item.fechaVacuna)  }}  </label></td>
+           </tr> 
+        </tbody>
+     </table> 
+     
+     <div class="row text-center"  > 
+        <div class="col-md-4" > 
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Info.Adicional</span>
+                <label type="text" class="form-control" placeholder="infoAdicional" aria-describedby="basic-addon1">
+                    {{saludGral.informacion}}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-4" > 
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Sabe Nadar</span>
+                <label type="text" class="form-control" placeholder="sabenadar" aria-describedby="basic-addon1">
+                    {{saludGral.sabeNadar==true?'SI':'No'}}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-4" > 
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Nota Comentario</span>
+                <label type="text" class="form-control" placeholder="notacomentario" aria-describedby="basic-addon1">
+                    {{saludGral.notaComentario}}
+                </label>
+            </div>
+        </div>
+      
+    </div>
+           </mat-expansion-panel>         
+        </mat-accordion>
+    </form>  
+
+    </div>
+
+</div> 
+
+<mat-accordion [hidden]="this.saludGral.cum==''"  [@triggResult]="this.saludGral.cum!=''"    > 
+<mat-expansion-panel [expanded]="panelOpenState===true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+    <mat-expansion-panel-header style="background-color: rgb(236, 221, 240);" >
+      <mat-panel-title><mat-icon>format_list_numbered</mat-icon>Historial Médico Eventos</mat-panel-title>
+      <mat-panel-description> </mat-panel-description>
+    </mat-expansion-panel-header>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <h6 class="text-center">Listado Médico</h6>
+            <div class="my-2">
+              
+              <div class="input-group mb-3">
+               <span class="input-group-text" id="addonSearch"><mat-icon matPrefix >search</mat-icon></span>
+               <input type="text" class="form-control"placeholder="Buscar..." aria-describedby="addonSearch" 
+                 [(ngModel)]="strCriterio"/>
+              </div>
+   
+            </div>
+            <table class="table table-striped table-hover">
+             <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Evento</th>
+                    <th scope="col">Registró</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Motivo</th>
+                    <th scope="col">Resultado</th>
+                </tr>
+             </thead>
+             <tbody>
+                <tr *ngFor="let item of this.listHistorial | jsonFilterBy:[this.strCriterio,'descripcion'] ">
+                    <td>
+                        <button mat-mini-fab color="primary" type="button" (click)="editItem(item);" >
+                        <i class="fas fa-edit  "></i> </button>
+                    </td>
+                    <td><textarea rows="2"   class="form-control" style="font-size:smaller;" disabled >{{item.nombreEvento}}</textarea></td>
+                    <td><textarea rows="2"   class="form-control" style="font-size: small;" disabled >{{item.cumRegistrador }}</textarea></td>
+                    <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{ formatoFecha(this.item.fecha) }}</textarea></td>
+                    <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.motivoConsulta }}</textarea></td>
+                    <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.resultado }}</textarea></td>
+                </tr> 
+             </tbody>
+            </table> 
+          
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 border border-secondary rounded">
+            <h6 class="text-center">Agregar/Editar Información </h6>           
+            <form [formGroup]="formHistorial" (ngSubmit)="saveItem()" >
+             <div  style="background-color: rgb(242, 248, 250);">
+                <h6>Tipo de Atención(es)</h6>
+                <div   class="form-check">
+                  <label class="form-check-label" for="checkAtencionCuracion">Curación</label>
+                  <input class="form-check-input" type="checkbox" id="checkAtencionCuracion"
+                   name="checkAtencionCuracion" #checkAtencionCuracion >
+                </div>
+                <div   class="form-check">
+                    <label class="form-check-label" for="checkAtencionBasica">Atención Básica</label>
+                    <input class="form-check-input" type="checkbox" id="checkAtencionBasica"
+                     name="checkAtencionBasica" #checkAtencionBasica >
+                </div>
+                <div   class="form-check">
+                    <label class="form-check-label" for="checkAtencionBasica">Atención con Observación</label>
+                    <input class="form-check-input" type="checkbox" id="checkAtencionObservacion"
+                    name="checkAtencionObservacion" #checkAtencionObservacion >
+                </div>
+                <div   class="form-check">
+                    <label class="form-check-label" for="checkAtencionPsicologica">Atención Psicológica</label>
+                    <input class="form-check-input" type="checkbox" id="checkAtencionPsicologica"
+                      name="checkAtencionPsicologica" #checkAtencionPsicologica >
+                  </div>
+                  <div   class="form-check">
+                    <label class="form-check-label" for="checkAtencionOtra">Otra</label>
+                    <input class="form-check-input" type="checkbox" id="checkAtencionOtra"
+                      name="checkAtencionOtra" #checkAtencionOtra >
+                  </div>
+             </div>
+
+          <br>
+                <mat-form-field style="color:purple; width:400px;"> <mat-icon matPrefix >health_and_safety</mat-icon>
+                    <mat-select placeholder="Elija un Motivo de Consulta"   #selectMotivoConsulta formControlName="selectMotivoConsulta" >
+                    <mat-option *ngFor="let item of listMotivosConsulta" [value]="item" >
+                        <mat-icon style="color: purple;">health_and_safety</mat-icon>{{item}}
+                    </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formHistorial.get('selectMotivoConsulta')?.hasError('required')">
+                    <mat-icon>warning_amber</mat-icon> Favor de elegir un Motivo de Consulta</mat-error>
+                </mat-form-field> 
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text bg-white color:purple" ><mat-icon>draw</mat-icon></div>
+                        </div>
+                     <!--    <input type="text" class="form-control" placeholder="Diagnóstico de la atención médica..." 
+                        #txtDescripcion formControlName="txtDescripcion" >  -->
+                        <textarea rows="1"   class="form-control" style="font-size: small;" placeholder="Diagnóstico..." 
+                        #txtDescripcion formControlName="txtDescripcion"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text bg-white color:purple" ><mat-icon>healing</mat-icon></div>
+                        </div>
+                       <!--  <input type="text" class="form-control" placeholder="Tratamiento de la atención médica..." 
+                        #txtTratamiento formControlName="txtTratamiento" >  -->
+                        <textarea rows="1"   class="form-control" style="font-size: small;" placeholder="Tratamiento..." 
+                        #txtTratamiento formControlName="txtTratamiento"></textarea>
+                    </div>
+                </div>
+
+         <br>
+                <mat-form-field style="color:purple; width:400px;"> <mat-icon matPrefix >monitor_heart</mat-icon>
+                    <mat-select placeholder="Elija un Resultado"   #selectMotivoConsulta formControlName="selectResultado" >
+                    <mat-option *ngFor="let item of listResultado" [value]="item" >
+                        <mat-icon style="color: purple;">fire_truck</mat-icon>{{item}}
+                    </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formHistorial.get('selectResultado')?.hasError('required')">
+                    <mat-icon>warning_amber</mat-icon> Favor de elegir un Resultado</mat-error>
+                </mat-form-field> 
+          
+
+
+
+
+
+
+
+
+              
+
+
+          
+                <div class="row text-center" >
+                    <div>
+                        <!-- disabled deshabilita si no cumple todos los req del controlador component -->
+                       <!--  <button class="btn btn-outline-success  " [disabled]="formQuizz.invalid" type="submit">
+                             <i class="fas fa-database"></i> Guardar</button>   -->  
+                         <button mat-raised-button color="accent" [disabled]="formHistorial.invalid" type="submit">
+                          <mat-icon>save</mat-icon>Guardar</button> 
+                          <button mat-raised-button color="basic"  [disabled]="txtDescripcion.value.length==0"  
+                          style="color: purple;" (click)="cleanFormHistorial()" >
+                          <mat-icon>cleaning_services</mat-icon>Limpiar/Nuevo</button>   
+                        
+                    </div>
+                </div>
+            </form> 
+
+        </div>
+    </div>
+
+    </mat-expansion-panel>
+</mat-accordion>
+
+
+</div>
+
+
+
+
+
+
+
+
+ 

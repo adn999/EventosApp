@@ -1,0 +1,23 @@
+.sector1 {  
+    
+    background-color: #dbbae42f;
+    /*background-image: url("/assets/wall2.png");  */
+    opacity: .9;
+   
+    align-items: center;
+    justify-content: center;
+    background-size: 100% ;  
+    
+}   
+
+
+.sector2 {  
+    
+    background-image: url("/assets/home.jpg");  
+    background-repeat: no-repeat;
+    opacity: .9;
+    align-items: center;
+    justify-content: center;
+    background-size: 100% ;  
+    
+}   

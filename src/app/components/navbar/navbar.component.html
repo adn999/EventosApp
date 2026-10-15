@@ -1,0 +1,184 @@
+<nav class="navbar navbar-expand-lg navbar-light lg-navbar lg-clear">
+    <div class="container-fluid">
+      <!-- Encabezado compacto solo en teléfono (el menú pasa a la barra inferior) -->
+      <span class="brand-telefono">
+        <img src="assets/logoScout.png" alt="">&nbsp;Eventos Scouts
+      </span>
+      <button class="navbar-toggler" type="button" (click)="playAudio('click')"
+      data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
+      aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fa fa-bars neon-shadow icon-collapsed"></i>
+        <i class="fa fa-times neon-shadow icon-expanded"></i>&nbsp;Menú
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+         <!-- <li class="nav-item">
+            <a class="nav-link" aria-current="page" routerLinkActive="active"  routerLink="/home">
+              <span class="fa fa-home" style="color:purple"></span> Inicio
+            </a>
+          </li> -->
+          
+         <!--  <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" (click)="IrReactivo()" >Reactivo con param</a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" title="Inicio" routerLinkActive="active" routerLink="/home" (click)="playAudio('click')" 
+            style="background-color:rgba(255, 255, 255, 0);" >
+                <li class="fa fa-campground efecto-spin" style="color:rgb(73, 64, 134);" ></li>&nbsp;&nbsp;Inicio
+            </a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link" title="Registro" routerLinkActive="active" routerLink="/RegistroEvento" (click)="playAudio('click')"  >
+                <li class="fa fa-feather efecto-spin" style="color:rgb(78, 97, 41)" ></li>&nbsp;&nbsp;Registro
+            </a>
+          </li>
+            <!--  <li class="nav-item">
+            <button mat-menu-item routerLink="/RegistroEvento">
+              <mat-icon style="color:purple" (mouseover)="mouseOn(1);" (mouseleave)="mouseOff(1);"  
+              [@triggLeft]="itemsMenu[1]"  [@triggRight]="itemsMenuOff[1]"
+               >terrain</mat-icon>Registro Evento </button>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" title="Consulta" routerLinkActive="active" routerLink="/ConsultaPulsera" (click)="playAudio('click')"  >
+                <li class="fa fa-binoculars efecto-spin" style="color:rgb(89, 192, 171)" ></li>&nbsp;&nbsp;Consulta
+            </a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link" title="Kit" routerLinkActive="active" routerLink="/Kit" (click)="playAudio('click')"  >
+                <li class="fa fa-shopping-cart efecto-spin" style="color:rgb(52, 125, 95)" ></li>&nbsp;&nbsp;Kit
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" title="Comida" routerLinkActive="active" routerLink="/RegistroComida" (click)="playAudio('click')"  >
+                <li class="fa fa-utensils efecto-spin" style="color:rgb(175, 89, 28)" ></li>&nbsp;&nbsp;Comida
+            </a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link" title="Salud" routerLinkActive="active" routerLink="/Salud"  (click)="playAudio('click')" >
+                <li class="fa fa-medkit efecto-spin" style="color:rgb(19, 86, 124)" ></li>&nbsp;&nbsp;Salud
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" title="Entrada Salida" routerLinkActive="active" routerLink="/EntradaSalida" (click)="playAudio('click')"  >
+                <li class="fa fa-map-signs efecto-spin" style="color:rgb(82, 56, 85)" ></li>&nbsp;&nbsp;Check In-Out
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" title="Pulsera Perdida" routerLinkActive="active" routerLink="/PulseraPerdida" (click)="playAudio('click')"  >
+                <li class="fa fa-cut efecto-spin" style="color:rgb(87, 33, 6)" ></li>&nbsp;&nbsp;Reposición
+            </a>
+          </li>
+         <li class="nav-item">
+            <a class="nav-link" title="Indicadores" routerLinkActive="active" routerLink="/Kpis" (click)="playAudio('click')"  >
+                <li class="fa fa-chart-pie efecto-spin" style="color:rgb(42, 165, 187)" ></li>&nbsp;&nbsp;KPIs
+            </a>
+          </li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" [matMenuTriggerFor]="catalogos"> 
+             <li class="fa fa-list" style="color:rgb(73, 64, 134)" ></li> Admin </a> 
+            <mat-menu #catalogos="matMenu" class="lg-menu">
+              <button mat-menu-item routerLink="/Menores" (click)="playAudio('click')"  ><mat-icon style="color:rgb(163, 39, 163)">child_care</mat-icon>Menores</button>
+              <button mat-menu-item routerLink="/ProtectMem" (click)="playAudio('click')"  ><mat-icon style="color:rgb(163, 39, 163)">security</mat-icon>Protec.Membresía</button>
+              <button mat-menu-item routerLink="/ReportePM" (click)="playAudio('click')" ><mat-icon style="color:rgb(191, 142, 191)">insert_chart</mat-icon>Reporte Protec.Mem.</button>
+              <button mat-menu-item routerLink="/ComidaHorario" (click)="playAudio('click')" ><mat-icon style="color:rgb(44, 113, 218)">timer</mat-icon>Comida Horario</button>
+              <button mat-menu-item routerLink="/ComidaEvento" (click)="playAudio('click')" ><mat-icon style="color:rgb(196, 143, 63)">fastfood</mat-icon>Comida Evento</button>
+               <!-- <button mat-menu-item routerLink="/catQuizzes" ><mat-icon style="color:purple">stream</mat-icon>Eventos</button> 
+              <button mat-menu-item routerLink="/catQuestions"><mat-icon style="color:purple">stream</mat-icon>Comidas</button> -->
+              <!-- <button mat-menu-item routerLink="/Mapa" class="efecto-big neon-shadow"><mat-icon style="color:rgb(206, 208, 129)">map</mat-icon>Mapa</button> -->
+            </mat-menu>
+          </li>
+
+        <!--   <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="fa fa-regular fa-clipboard"></span> Encuestas
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" routerLinkActive="active" routerLink="/testsurvey">
+                <span class="fa fa-regular fa-clipboard"></span> Encuesta Demo</a></li>
+              <li><a class="dropdown-item" routerLinkActive="active" (click)="IrPlantilla()" >
+                <span class="fa fa-regular fa-clipboard"></span> Quizz con parámetros</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">-----</a></li>
+            </ul>
+          </li> -->
+
+          <!--   <li class="nav-item dropdown">
+            <button class="nav-link dropdown-toggle"
+             [matMenuTriggerFor]="encuestas"> 
+             <span class="fa fa-regular fa-clipboard" style="color:purple"></span> Evento Datos </button> 
+           
+            <mat-menu #encuestas="matMenu">
+
+            <button mat-menu-item routerLink="/testsurvey" ><mat-icon style="color:purple" >list_alt</mat-icon> Demo</button>
+              <button mat-menu-item (click)="IrPlantilla()"><mat-icon style="color:purple">list_alt</mat-icon>Quizz con Parámetros</button> -->
+            <!--   <button mat-menu-item [matMenuTriggerFor]="subA">Submenú A</button>
+              <button mat-menu-item [matMenuTriggerFor]="subB">Submenú B</button>
+            </mat-menu>
+             <mat-menu #subA="matMenu">   
+              <button mat-menu-item>A1</button>
+              <button mat-menu-item>A2</button>
+            </mat-menu>
+            <mat-menu #subB="matMenu">   
+              <button mat-menu-item>B1</button>
+              <button mat-menu-item>B2</button>
+            </mat-menu>    
+          </li> -->
+
+           <li class="nav-item ">
+            <a class="nav-link" title="Salir" routerLinkActive="active" (click)="closeSesion()" >
+                <li class="fa fa-unlock-alt efecto-spin" style="color:rgb(173, 69, 21)"></li>&nbsp;Salir
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+<!-- Barra de pestañas inferior: solo teléfono -->
+<nav class="tabbar-telefono" *ngIf="esTelefono && !usaNativo">
+  <a *ngFor="let op of dockItems" class="tab" [routerLink]="op.ruta" routerLinkActive="activo"
+     [class.con-etiqueta]="etiquetaActiva===op.texto" (click)="playAudio('click'); masAbierto=false; mostrarEtiqueta(op.texto)">
+    <i class="fa {{op.icono}}" [style.color]="op.color"></i><span>{{op.texto}}</span>
+  </a>
+  <button type="button" class="tab" *ngIf="mostrarMas" [class.activo]="masAbierto"
+          [class.con-etiqueta]="etiquetaActiva==='Más'" (click)="playAudio('click'); masAbierto=!masAbierto; mostrarEtiqueta('Más')">
+    <i class="fa fa-th-large" style="color:rgb(101, 50, 124)"></i><span>Más</span>
+  </button>
+  <!-- Tableta: "Salir" es siempre la última opción de la barra -->
+  <button type="button" class="tab" *ngIf="salirEnDock"
+          [class.con-etiqueta]="etiquetaActiva==='Salir'" (click)="playAudio('click'); masAbierto=false; mostrarEtiqueta('Salir'); closeSesion()">
+    <i class="fa fa-unlock-alt" style="color:rgb(173, 69, 21)"></i><span>Salir</span>
+  </button>
+</nav>
+
+<!-- Panel "Más": solo teléfono -->
+<div class="mas-fondo" *ngIf="esTelefono && !usaNativo && mostrarMas && masAbierto" (click)="masAbierto=false"></div>
+<div class="mas-panel" *ngIf="esTelefono && !usaNativo && mostrarMas && masAbierto">
+  <div class="mas-asa"></div>
+  <div class="mas-grid">
+    <a *ngFor="let op of panelItems" class="mas-item" [routerLink]="op.ruta" routerLinkActive="activo"
+       (click)="playAudio('click'); masAbierto=false">
+      <i class="fa {{op.icono}}" [style.color]="op.color"></i><span>{{op.texto}}</span>
+    </a>
+    <button type="button" class="mas-item" *ngIf="!salirEnDock" (click)="masAbierto=false; closeSesion()">
+      <i class="fa fa-unlock-alt" style="color:rgb(173, 69, 21)"></i><span>Salir</span>
+    </button>
+    <!-- iOS: volver a la barra nativa -->
+    <button type="button" class="mas-item" *ngIf="esIOS" (click)="playAudio('click'); cambiarMenu(true)">
+      <i class="fa fa-mobile-alt" style="color:rgb(101, 50, 124)"></i><span>Menú nativo</span>
+    </button>
+  </div>
+</div>
+
+<!-- Overlay de video de salida -->
+<div *ngIf="showExitVideo" class="exit-video-overlay">
+  <video #exitVid autoplay playsinline
+         class="exit-video" [class.exit-fading]="isExitFading"
+         (timeupdate)="onExitVideoTimeUpdate(exitVid)"
+         (ended)="onExitVideoEnded()">
+    <source src="assets/ScoutExit.mp4" type="video/mp4">
+  </video>
+</div>

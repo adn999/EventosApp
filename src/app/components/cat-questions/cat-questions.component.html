@@ -1,0 +1,163 @@
+<app-navbar></app-navbar>
+<div class="mx-3 ">
+    <!-- <h6 class="display-6 text-center">Catálogo de Preguntas</h6> -->
+    <div class="row">
+        <div class="col-md-12">
+         <div class="text-center"></div>
+
+    <mat-toolbar color="primary"  style=" background-color:rgb(94, 139, 165);  font-size:x-large;"  ><span>Catálogo de Preguntas</span></mat-toolbar>
+   <br>
+   
+               <mat-form-field color="primary" style="color: purple;" >
+                <mat-icon matPrefix >hub</mat-icon>
+                <mat-select placeholder="Elija un Evento..."  [(ngModel)] ="intCriterio"
+                  (selectionChange)="loadQuestions();"  >
+                  <mat-option *ngFor="let itemQuizz of listQuizzes" [value]="itemQuizz.idAgrupador">
+                  <mat-icon style="color: purple;">format_list_numbered</mat-icon>  {{itemQuizz.nombreEncuesta}}
+                  </mat-option>
+                </mat-select>
+                </mat-form-field>
+              
+                  <mat-accordion>
+                    <ng-container *ngIf="this.listQuestions.length>0" >
+                   <mat-expansion-panel [expanded]="panelOpenState===false" (opened)="panelOpenState = false" (closed)="panelOpenState = true" >
+                    <mat-expansion-panel-header style="background-color: rgb(217, 237, 248);" >
+                      <mat-panel-title><mat-icon>list_alt</mat-icon>Encuesta </mat-panel-title>
+                      <mat-panel-description>Contenido-Preguntas</mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                        <table id="tblPreguntas" class="table table-striped table-hover"  >
+                         <thead>
+                          <tr>
+                            <th scope="col">Orden</th>
+                            <th scope="col">Pregunta</th>
+                            <th scope="col">Obliga</th>
+                            <th scope="col">Activo</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Opciones</th>
+                          </tr>
+                         </thead>
+                         <tbody>
+                            <tr *ngFor="let item of this.listQuestions | slice:desde:hasta ">
+                                <th>{{item.idOrder}}</th>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.texto}}</textarea></td>
+                                <td>{{item.isRequired==0?'No':'Sí' }}</td>
+                                <td>{{item.isActive==0?'No':'Sí'}}</td>
+                                <td>{{this.getTipoDescripcion( item.tipoReactivo) }}</td>
+                                <td><textarea rows="2"   class="form-control" style="font-size: small;" disabled >{{item.textoOpciones}}</textarea> </td>
+                                <td><button mat-mini-fab color="primary" type="button" (click)="editItem(item);" >
+                                    <i class="fas fa-edit  "></i> </button>
+                                </td>
+                            </tr> 
+                         </tbody>
+                        </table> 
+                        <div class="row">
+                          <div class="col-md-4">
+                            <button mat-mini-fab color="accent" type="button" (click)="exportexcel();" >
+                            <i class="fas fa-file-excel  "></i> </button>
+                          </div>
+                          <div class="col-md-8">
+                            <mat-paginator 
+                            [length]="this.listQuestions.length"
+                            [pageSize]="pageSize"  [pageSizeOptions]="[10,25,50]"
+                            (page)="cambiarPagina($event)"
+                            aria-label="Select page">
+                          </mat-paginator>
+                        </div>
+                        </div>
+
+                    </mat-expansion-panel>
+                    </ng-container>
+
+                    <ng-container *ngIf="this.intCriterio>0" >
+                    <mat-expansion-panel [expanded]="panelOpenState===true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                      <mat-expansion-panel-header style="background-color: rgb(236, 221, 240);" >
+                        <mat-panel-title><mat-icon>format_list_numbered</mat-icon>Detalle de las Preguntas </mat-panel-title>
+                        <mat-panel-description> </mat-panel-description>
+                      </mat-expansion-panel-header>
+                       
+                        <div class="col-md-12">
+                           <h6 class="text-center">Agregar/Editar Pregunta </h6>           
+                            <form [formGroup]="formQuestion" (ngSubmit)="saveItem()" >
+                               <mat-form-field style="width:auto;">
+                                   <input matInput placeholder="orden..." type="number" 
+                                    #txtidOrder  formControlName="txtidOrder" (keypress)="validarNumero($event)"  >
+                                    <mat-icon matPrefix style="color: purple;" >numbers</mat-icon> 
+                                    <mat-error *ngIf="!formQuestion.get('txtidOrder')?.hasError('required') && 
+                                    formQuestion.get('txtidOrder')?.hasError('min')">
+                                       <mat-icon>warning_amber</mat-icon> Debe ser > 0
+                                   </mat-error>
+                                   <mat-error *ngIf="formQuestion.get('txtidOrder')?.hasError('required')" >
+                                    <mat-icon>warning_amber</mat-icon> El orden es requerido  
+                                   </mat-error>       
+                               </mat-form-field>   
+                               <br>
+                
+                               <mat-form-field style="color:purple;"> <mat-icon matPrefix >bubble_chart</mat-icon>
+                                   <mat-select placeholder="Elija un Tipo..."   #selectTipo formControlName="selectTipo" 
+                                    (selectionChange)="setValidatorOpciones();" >
+                                     <mat-option *ngFor="let item of listTipoReactivos" [value]="item.idTipo" >
+                                        <mat-icon style="color: purple;">short_text</mat-icon>{{item.descripcion}}
+                                     </mat-option>
+                                   </mat-select>
+                                   <mat-error *ngIf="formQuestion.get('selectTipo')?.hasError('required')">
+                                       <mat-icon>warning_amber</mat-icon> Favor de elegir un Tipo</mat-error>
+                                      <!-- <mat-hint>{{ formQuestion.get('selectTipo')?.value}}</mat-hint>  -->
+                               </mat-form-field> 
+               
+                               <mat-form-field  style="width:100%;" >
+                                   <mat-icon matPrefix style="color: purple;" >edit_note</mat-icon>
+                                   <input matInput placeholder="pregunta..." type="text" #txtTexto formControlName="txtTexto"  >
+                                   <mat-error *ngIf="formQuestion.get('txtTexto')?.hasError('required')">
+                                       <mat-icon>warning_amber</mat-icon> La Pregunta es requerida  
+                                    </mat-error>
+                                    <mat-error *ngIf="formQuestion.get('txtTexto')?.hasError('minlength')">
+                                       <mat-icon>warning_amber</mat-icon> Debe ser un valor válido 
+                                    </mat-error>
+                               </mat-form-field> <br>
+               
+                               <mat-checkbox  id="chkisRequired" name="chkisRequired" formControlName="chkisRequired" #chkisRequired>Es Obligatorio</mat-checkbox>   
+                               <br>
+                               <mat-checkbox #chkisActive formControlName="chkisActive">Es Activo</mat-checkbox>
+                               <br><br>
+                         
+                               <mat-form-field style="width:100%;">
+                                   <textarea matInput #txtTextoOpciones formControlName="txtTextoOpciones"
+                                    placeholder="Opciones separadas por caracter '_'  "></textarea>
+                                   <mat-icon matPrefix style="color: purple;" >edit_note</mat-icon>
+                                   <mat-error *ngIf="formQuestion.get('txtTextoOpciones')?.hasError('required')">
+                                       <mat-icon>warning_amber</mat-icon> Las opciones son requeridas para este tipo de pregunta  
+                                   </mat-error>
+                                   <mat-error *ngIf="formQuestion.get('txtTextoOpciones')?.hasError('minlength')">
+                                      <mat-icon>warning_amber</mat-icon> Debe tener más contenido
+                                  </mat-error>
+               
+                                   <div class="alert alert-warning" *ngIf= "this.ObligaOpciones(formQuestion.get('selectTipo')?.value)" >
+                                      <mat-icon>warning_amber</mat-icon> En ese control requiere especificar sus opciones</div>
+                               </mat-form-field>
+                                <br>
+                               <div class="row text-center" *ngIf= "!this.ObligaOpciones(formQuestion.get('selectTipo')?.value)" >
+                                   <div > 
+                                        <button mat-raised-button color="accent" [disabled]="formQuestion.invalid" type="submit">
+                                         <mat-icon>save</mat-icon>Guardar</button>
+                                         <button mat-raised-button color="warn" [disabled]="formQuestion.invalid"
+                                          style="color: white;" (click)="cleanForm()" >
+                                          <mat-icon>cleaning_services</mat-icon>Limpiar/Nuevo</button>         
+                                   </div>
+                               </div>
+                           </form> 
+               
+                        </div>
+                      
+                    </mat-expansion-panel>
+                    </ng-container>
+                </mat-accordion>
+               
+        </div>
+    </div>
+    <div class="row">
+        
+    
+     <!-- <pre>{{formQuestion.value | json}}</pre>  -->
+    </div>
+</div>

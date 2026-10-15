@@ -1,0 +1,172 @@
+<app-navbar></app-navbar>
+
+<div class="menores-bg">
+
+<div class="mx-3" style="background-color: rgba(255, 255, 255, 0);">
+
+    <div class="row align-items-center" style="background-color: rgba(255, 255, 255, 0);">
+        <div class="col-md-12 menores-banner lg-clear">
+            <h3 class="text-center neon-shadow" >Menores de Edad</h3>
+        </div> 
+    </div>
+
+</div>
+
+<div class="container" style="background-color: rgba(255, 255, 255, 0);">
+  <br>
+
+    <!-- Menores de Edad sin carta de Aprobación -->
+    <div class="row align-items-center" >
+        <div class="col-md-12">
+
+          <div *ngIf="contadorUnnotifiedMinors<0" class="lg-glass lg-loading">
+            <span class="lg-spinner"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span> Calculando Menores de Edad sin carta de Aprobación...
+          </div>
+
+          <h5 *ngIf="contadorUnnotifiedMinors>=0">Menores de Edad sin carta de Aprobación</h5>
+
+          <div *ngIf="contadorUnnotifiedMinors>=0" class="menores-alert-row">
+            <label class="alert alert-info neon-shadow mb-0" style="color: rgb(43, 7, 54);">
+              Se localizaron <b>{{ contadorUnnotifiedMinors }}</b> Menores sin sobre al momento.
+            </label>
+          
+
+             <button mat-raised-button color="accent" class="neon-shadow"  (click)="sendEnvelopes()"
+                     style="color: rgb(246, 241, 246); background-color:#257c79c1; height:55px;" >
+                     <i class= "fas fa-paper-plane fa-xl efecto-spin"  ></i> Enviar Sobres a Tutores con Email
+                    </button>  
+
+          </div>
+          <br>
+        </div>
+    </div>
+
+    <!-- Menores de Edad sin Sobre Asignado -->
+    <div class="row" *ngIf="contadorUnnotifiedMinors>=0 && puedeGestionarMenores" >
+        <div class="col-md-12">
+                  <mat-accordion>
+                    <ng-container  >
+                   <mat-expansion-panel [expanded]="panelOpenState===false" (opened)="panelOpenState = false" (closed)="panelOpenState = true" >
+                    <mat-expansion-panel-header style="background-color: rgb(217, 237, 248);" >
+                      <mat-panel-title><mat-icon>list_alt</mat-icon>Sin Sobre Asignado </mat-panel-title>
+                      <mat-panel-description>Contenido</mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                        <div class="table-responsive">
+                        <table id="tblRegistrosMenores" class="table table-striped table-hover"  >
+                         <thead>
+                          <tr>
+                            <th scope="col">CUM</th>
+                            <th scope="col">Nombre Menor</th>
+                            <th scope="col">Nombre Tutor</th>
+                            <th scope="col">Correo Tutor</th>
+                            <th scope="col">Celular Tutor</th>
+                          </tr>
+                         </thead>
+                         <tbody>
+                            <tr *ngFor="let item of this.reporteMenores | slice:desde:hasta ">
+                                <th>{{item.cum}}</th>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.nombreMenor}}</textarea></td>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.nombreTutor}}</textarea></td>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.correo}}</textarea></td>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.celular}}</textarea></td>
+                            </tr>
+                         </tbody>
+                        </table>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-4">
+                            <button mat-mini-fab color="accent" type="button" (click)="exportexcel('tblRegistrosMenores','Registros Menores sin Sobre');" >
+                            <i class="fas fa-file-excel  "></i> </button>
+                          </div>
+                          <div class="col-md-8">
+                            <mat-paginator
+                            [length]="this.reporteMenores.length"
+                            [pageSize]="pageSize"  [pageSizeOptions]="[10,25,50]"
+                            (page)="cambiarPagina($event)"
+                            aria-label="Select page">
+                          </mat-paginator>
+                        </div>
+                        </div>
+                    </mat-expansion-panel>
+                    </ng-container>
+                </mat-accordion>
+        </div>
+    </div>
+    <br/>
+
+    <!-- Menores con Teléfono de Tutor Inválido -->
+    <div class="row align-items-center" >
+        <div class="col-md-12">
+
+          <div *ngIf="contadorInvalidPhone<0" class="lg-glass lg-loading">
+            <span class="lg-spinner"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span> Calculando Menores con Teléfono de Tutor Inválido...
+          </div>
+
+          <h5 *ngIf="contadorInvalidPhone>=0">Menores con Teléfono de Tutor Inválido</h5>
+
+          <div *ngIf="contadorInvalidPhone>=0" class="menores-alert-row">
+            <label class="alert alert-warning neon-shadow mb-0" style="color: rgb(43, 7, 54);">
+              Se localizaron <b>{{ contadorInvalidPhone }}</b> Menores con sobre sin firmar y sin cel. al momento.
+            </label>
+          </div>
+          <br>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="contadorInvalidPhone>=0 && puedeGestionarMenores" >
+        <div class="col-md-12">
+                  <mat-accordion>
+                    <ng-container  >
+                   <mat-expansion-panel [expanded]="panelOpenStateTelefono===false" (opened)="panelOpenStateTelefono = false" (closed)="panelOpenStateTelefono = true" >
+                    <mat-expansion-panel-header style="background-color: rgb(237, 188, 128);" >
+                      <mat-panel-title><mat-icon>list_alt</mat-icon>Sin Cel. Sobre Sin Firmar</mat-panel-title>
+                      <mat-panel-description>Contenido</mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                        <div class="table-responsive">
+                        <table id="tblRegistrosMenoresTelefono" class="table table-striped table-hover"  >
+                         <thead>
+                          <tr>
+                            <th scope="col">CUM</th>
+                            <th scope="col">Nombre Menor</th>
+                            <th scope="col">Nombre Tutor</th>
+                            <th scope="col">Correo Tutor</th>
+                            <th scope="col">Celular Tutor</th>
+                          </tr>
+                         </thead>
+                         <tbody>
+                            <tr *ngFor="let item of this.reporteMenoresTelefono | slice:desdeTelefono:hastaTelefono ">
+                                <th>{{item.cum}}</th>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.nombreMenor}}</textarea></td>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.nombreTutor}}</textarea></td>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.correo}}</textarea></td>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.celular}}</textarea></td>
+                            </tr>
+                         </tbody>
+                        </table>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-4">
+                            <button mat-mini-fab color="accent" type="button" (click)="exportexcel('tblRegistrosMenoresTelefono','Menores Telefono Invalido');" >
+                            <i class="fas fa-file-excel  "></i> </button>
+                          </div>
+                          <div class="col-md-8">
+                            <mat-paginator
+                            [length]="this.reporteMenoresTelefono.length"
+                            [pageSize]="pageSizeTelefono"  [pageSizeOptions]="[10,25,50]"
+                            (page)="cambiarPaginaTelefono($event)"
+                            aria-label="Select page">
+                          </mat-paginator>
+                        </div>
+                        </div>
+                    </mat-expansion-panel>
+                    </ng-container>
+                </mat-accordion>
+        </div>
+    </div>
+    <br/>
+
+</div><!-- /container -->
+
+</div><!-- /background wrapper -->

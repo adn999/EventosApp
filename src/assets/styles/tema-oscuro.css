@@ -1,0 +1,67 @@
+/* =====================================================================
+   MODO OSCURO (tenue) — solo si el teléfono/navegador está en modo oscuro.
+   Da un tinte gris-violeta al cristal (barra inferior, navbar/título, banners, campos de texto,
+   cuadros emergentes, tarjetas y tablas). Los textos y colores se quedan igual.
+   Para quitarlo: borrar este archivo y su línea en angular.json.
+   ===================================================================== */
+@media (prefers-color-scheme: dark) {
+
+  :root {
+    --lg-tinte: 120, 110, 150;      /* gris-violeta: sube/baja la alfa de cada regla para más o menos oscuro */
+
+    --lg-fill: rgba(206, 200, 222, 0.26);
+    --lg-fill-strong: rgba(206, 200, 222, 0.48);
+    --lg-fill-hover: rgba(206, 200, 222, 0.38);
+    --lg-stroke: rgba(235, 230, 245, 0.38);
+  }
+
+  /* ── Tarjetas, tablas y paneles ── */
+  .lg-glass { background: linear-gradient(145deg, rgba(206, 200, 222, 0.38), rgba(206, 200, 222, 0.16)); }
+  .lg-scope .table:not(.table .table) { background: linear-gradient(145deg, rgba(206, 200, 222, 0.48), rgba(206, 200, 222, 0.26)); }
+  .lg-card, .lg-scope .kpi-card, .lg-scope .chart-card {
+    background: linear-gradient(145deg, rgba(206, 200, 222, 0.50), rgba(206, 200, 222, 0.24)) !important;
+  }
+  .lg-scope .table-hover > tbody tr:hover, .lg-table > tbody tr:hover { background: rgba(206, 200, 222, 0.42); }
+  .lg-scope .mat-expansion-panel-header { background: rgba(206, 200, 222, 0.30) !important; }
+  .lg-scope .mat-expansion-panel-header:hover { background: rgba(206, 200, 222, 0.46) !important; }
+
+  /* ── Dock inferior del teléfono ── */
+  .tabbar-telefono {
+    background: linear-gradient(160deg, rgba(var(--lg-tinte), 0.40), rgba(var(--lg-tinte), 0.22)) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+  }
+  .tabbar-telefono .tab { background: linear-gradient(145deg, rgba(200, 192, 222, 0.78), rgba(170, 160, 198, 0.50)) !important; }
+  .tabbar-telefono .tab.activo { background: linear-gradient(145deg, rgba(225, 218, 240, 0.92), rgba(190, 180, 215, 0.72)) !important; }
+
+  /* ── Navbar / título "Eventos Scouts" y banners de cada pantalla ── */
+  .navbar.lg-navbar,
+  .navbar.lg-navbar.lg-clear,
+  .lg-scope .mat-toolbar,
+  .lg-toolbar,
+  .menores-banner.lg-clear,
+  .kpis-header.lg-clear {
+    background: linear-gradient(145deg, rgba(var(--lg-tinte), 0.36), rgba(var(--lg-tinte), 0.20)) !important;
+  }
+
+  /* ── Campos de texto ── */
+  .lg-field,
+  .lg-scope .form-control,
+  .lg-scope .form-select,
+  .lg-scope .mat-mdc-form-field .mat-mdc-text-field-wrapper { background: rgba(var(--lg-tinte), 0.30) !important; }
+  .lg-scope .input-group-text { background: rgba(var(--lg-tinte), 0.24); }
+  .lg-scope .table textarea.form-control { background-color: rgba(var(--lg-tinte), 0.30) !important; }
+  .lg-field:focus-within,
+  .lg-scope .form-control:focus,
+  .lg-scope .form-select:focus,
+  .lg-scope .mat-mdc-form-field.mat-focused .mat-mdc-text-field-wrapper { background: rgba(var(--lg-tinte), 0.44) !important; }
+
+  /* ── Cuadros emergentes: avisos, listas desplegables y menús ── */
+  .swal2-popup { background: linear-gradient(160deg, rgba(200, 192, 222, 0.74), rgba(185, 176, 210, 0.66)) !important; }
+  .mat-mdc-select-panel,
+  .mat-mdc-menu-panel.lg-menu { background: linear-gradient(160deg, rgba(200, 192, 222, 0.82), rgba(185, 176, 210, 0.74)) !important; }
+
+  /* ── Panel "Más" del teléfono ── */
+  .mas-panel { background: linear-gradient(180deg, rgba(var(--lg-tinte), 0.30), rgba(var(--lg-tinte), 0.16)); }
+  .mas-item { background: linear-gradient(145deg, rgba(var(--lg-tinte), 0.26), rgba(var(--lg-tinte), 0.10)); }
+  .mas-item.activo { background: rgba(var(--lg-tinte), 0.34); }
+}

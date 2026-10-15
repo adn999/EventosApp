@@ -1,0 +1,31 @@
+.protec-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('/assets/lost.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: rgba(255, 255, 255, 0.20);
+  background-blend-mode: overlay;
+  z-index: -1;
+}
+
+ .efecto-slide {/* Set a smooth transition for the transform property */
+      transition: transform 0.3s ease-in-out; color:white}
+
+  .efecto-slide:hover { transform: translateX(18px); color:rgb(183, 198, 120);}
+
+
+   .efecto-spin {/* Initial state */
+    transition: all 0.5s ease; color: white; }
+
+ .efecto-spin:hover {/* Effect on hover */
+        transform: rotate(45deg) scale(1.4); color: rgb(203, 224, 143);}
+
+
+
+ .neon-shadow {  filter:   drop-shadow(5px 5px 2px gray) ;    transition: all 0.3s ease; }
+
+/* Efecto hover: intensificar el brillo */
+.neon-shadow:hover { filter:drop-shadow(5px 5px 3px gray)  drop-shadow(5px 5px 5px rgb(168, 167, 167));  }

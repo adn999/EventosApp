@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ASMAC</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    /* Splash animada (solo app nativa). Imita la imagen del arranque nativo para que el cambio no se note:
+       logo al 30 % del lado mayor, centrado al 44 % de la altura, nombre en dos líneas debajo. */
+    #splash-app { display: none; position: fixed; inset: 0; z-index: 99999; overflow: hidden;
+      background: radial-gradient(75% 75% at 50% 42%, #8a55ad, #3f2060); opacity: 1; }
+    html.es-nativa #splash-app { display: block; }
+    #splash-app .sp-centro { position: absolute; left: 50%; top: calc(50% - 6vmax); width: 0; height: 0; }
+    #splash-app .sp-halo { position: absolute; width: 46.8vmax; height: 46.8vmax; left: -23.4vmax; top: -23.4vmax; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,.30) 55%, rgba(255,255,255,0) 100%); }
+    #splash-app .sp-logo { position: absolute; width: 30vmax; height: 30vmax; left: -15vmax; top: -15vmax; border-radius: 50%; overflow: hidden; }
+    #splash-app .sp-logo img { width: 100%; height: 100%; display: block; }
+    #splash-app .sp-logo::after { content: ''; position: absolute; inset: 0; transform: translateX(-130%);
+      background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.55) 50%, transparent 62%); }
+    #splash-app .sp-texto { position: absolute; left: -50vmax; width: 100vmax; top: calc(22.3vmax - 5.2vmax); text-align: center; color: rgba(255,255,255,.95);
+      font: 300 5.5vmax/6.6vmax "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: 1.46vmax; text-indent: 1.46vmax; }
+    #splash-app.go .sp-halo  { animation: spHalo .65s ease-in-out both; }
+    #splash-app.go .sp-logo  { animation: spLogo .45s cubic-bezier(.34,1.56,.64,1) both; }
+    #splash-app.go .sp-logo::after { animation: spBrillo .4s ease-in-out .25s both; }
+    #splash-app.go .sp-texto { animation: spTexto .35s ease-out .15s both; }
+    #splash-app.salir { animation: spSalir .4s ease-in forwards; }
+    @keyframes spLogo  { 0% { transform: scale(1); } 35% { transform: scale(.95); } 70% { transform: scale(1.06); } 100% { transform: scale(1); } }
+    @keyframes spHalo  { 0% { transform: scale(1); opacity: 1; } 45% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1.02); opacity: .85; } }
+    @keyframes spBrillo { from { transform: translateX(-130%); } to { transform: translateX(130%); } }
+    @keyframes spTexto { 0% { opacity: 1; transform: translateY(0); } 30% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes spSalir { to { opacity: 0; transform: scale(1.06); } }
+    @media (prefers-color-scheme: dark) {
+      #splash-app { background: radial-gradient(75% 75% at 50% 42%, #5e3a80, #22113a); }
+      #splash-app .sp-halo { background: radial-gradient(circle, rgba(255,255,255,.16) 55%, rgba(255,255,255,0) 100%); }
+    }
+  </style>
+</head>
+<body class="mat-typography">
+  <div id="splash-app" aria-hidden="true">
+    <div class="sp-centro">
+      <div class="sp-halo"></div>
+      <div class="sp-logo"><img src="assets/logoScout.png" alt=""></div>
+      <div class="sp-texto">EVENTOS<br>SCOUTS</div>
+    </div>
+  </div>
+  <app-root></app-root>
+</body>
+</html>

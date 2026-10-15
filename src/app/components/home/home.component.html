@@ -1,0 +1,101 @@
+
+
+<app-login  *ngIf="this.localUser.cum.length==0 "></app-login>
+
+<app-navbar *ngIf="this.localUser.cum.length>0" ></app-navbar> 
+
+  <img class="bg-foto" src="../../../assets/compass-fondo.jpg" alt="" aria-hidden="true">
+    
+
+<div class="container"   style="background-color: rgba(255, 255, 255, 0);">
+    <div class="row align-items-center"  *ngIf="this.localUser.cum.length>0"  >
+        <div class="col-12"> 
+            <table class="table table-transparent" 
+            [@mostrarTrigger]="estado" >
+            <tbody>
+            <tr >
+                  <td  style="text-align:right;"> 
+                   <img [src]="imagePath" class="efecto-big-image neon-image home-avatar"
+                   style="border-radius:50%; aspect-ratio:1; object-fit: cover; border: 4px solid #ffffff;" width="80" height="80"   [@imgTrigger]="estadoImg" > 
+                  </td>
+                  <td style="text-align:left;">  
+                    <h3  class="neon-shadow home-hola"  [@mostrarTrigger]="estado"  style="color: rgb(107, 107, 61)" >
+                    <span style="color:rgb(184, 78, 7)"> Hola, </span> {{this.localUser.nombre | titlecase }}</h3>
+                  </td>
+                  <td>
+
+                     <div  class="d-flex justify-content-center "  *ngIf="this.macroEvento.length>0" >
+                        <div class="row" >
+                        <div class="col-12">
+                            <h5 (mouseover)="mouseOn();" [@mostrarTrigger]="estado" class="alert alert-light efecto-big neon-shadow" style="color: rgb(121, 82, 35)" >
+                                Evento Actual:
+                                    <i class="fas fa-flag-checkered fa-xl efecto-spin neon-shadow" style="color: rgb(21, 150, 185);"  >&nbsp;&nbsp;</i>
+                                    {{this.macroEvento.toUpperCase()| titlecase }}</h5>    
+                        </div>
+                        </div>
+                    </div>
+
+                  </td>
+                  
+            </tr>
+            <tr>
+
+
+             <td colspan="3">
+                <form [formGroup]="formMacroEventos" (ngSubmit)="$event.preventDefault()"   *ngIf="this.localUser.cum.length>0" >
+                  <div class="row" >
+                    <div class="col-12 col-sm-6 home-col" style="position:relative;">
+                        <mat-form-field style="color:darkslategrey;" class="neon-shadow home-select" subscriptSizing="dynamic" >
+                        <!-- <mat-icon matPrefix >touch_app</mat-icon> -->
+
+                        <i class="fas fa-angle-double-right fa-xl efecto-spin neon-shadow" matPrefix style="color: rgb(21, 150, 185);"  ></i>
+                        <mat-select placeholder="Elija un Evento"   #selectTipo formControlName="selectTipo"
+                        (selectionChange)="setValidatorOpciones();" >
+                        <mat-option *ngFor="let item of listMacroEventos" [value]="item" class="efecto-big" >
+                        <i class="fas fa-hiking fa-xl efecto-slide neon-shadow" style="color: darkorange;"></i>&nbsp;&nbsp; {{item}}
+                        </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formMacroEventos.get('selectTipo')?.hasError('required')">
+                        <mat-icon>warning_amber</mat-icon> Favor de elegir un Tipo</mat-error>
+                        </mat-form-field>
+                        <i  *ngIf= "mostrarManoSeleccion && formMacroEventos.get('selectTipo')?.hasError('required')  && this.macroEvento.length==0 "
+                            class="fas fa-hand-point-down select-evento-hint" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-12 col-sm-6 home-col" style="position:relative;"  *ngIf= "!formMacroEventos.get('selectTipo')?.hasError('required') " >
+                        <button mat-raised-button color="accent" [disabled]="formMacroEventos.invalid" type="button"
+                        (click)="saveItem()"
+                        class="neon-shadow btn-activar" [class.btn-activar-pulse]="txtBtn.startsWith('ACTIVAR')"
+                        style="color: rgb(246, 241, 246); background-color:#257c4bc1;" >
+                        <i [ngClass]="this.macroEvento.length>0 ?'fas fa-cog fa-xl efecto-spin':'fas fa-thumbtack fa-xl efecto-spin'"  ></i> {{txtBtn}}
+                        </button>
+                        <i  *ngIf= "mostrarManoSeleccion"
+                            class="fas fa-hand-point-down select-evento-hint" aria-hidden="true"></i>
+                   </div>
+                 </div>
+                </form>
+             </td>
+         
+            </tr>
+            
+
+            </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+  <br><br>
+  <div  class="d-flex justify-content-center align-items-center" >
+  <div class="row">
+   
+     
+    
+   </div>
+</div>
+ 
+ 
+
+
+<!-- 
+ <app-snow></app-snow> 
+    -->

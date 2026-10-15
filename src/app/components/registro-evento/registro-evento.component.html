@@ -1,0 +1,130 @@
+<app-navbar></app-navbar>
+
+<div class="registro-bg">
+
+ 
+
+    <!-- <h6 class="display-6 text-center">Catálogo de Preguntas</h6> -->
+    <div class="row mx-0" [@mostrarTriggerCollapse]="estado"  >
+        <div class="col-md-12">
+         <div class="text-center"></div>
+         <mat-toolbar color="primary"  style=" background-color:rgb(94, 139, 165);  font-size:x-large;"  >
+            <span>Registro Evento</span>
+            <img class="rounded" src="../../../assets/logoScout.png" width="60" height="60">
+         </mat-toolbar>
+         <br>
+        </div>
+    </div>
+
+
+   
+  <div class="d-flex justify-content-center align-items-center"> 
+ 
+  <div class="row mx-0 w-100" style="background-color: rgba(255, 255, 255, 0);" >
+
+    <div class="col-12"  >
+    <h6 class="text-center">
+        <mat-icon matPrefix style="color: purple;" >camera_front</mat-icon>
+        Captura los datos del Invitado  </h6>           
+    <app-modo-captura clave="registro-evento" [(modo)]="modoCaptura"></app-modo-captura>
+    <form [formGroup]="formRegistro" (ngSubmit)="saveItem()" >
+        
+         <div class="campo-escaner">
+        <mat-form-field  style="width:100%; max-width:240px;" [@mostrarTrigger]="estado" class="neon-shadow"  [subscriptSizing]="modoCaptura==='camara' ? 'dynamic' : 'fixed'">
+            <mat-icon matPrefix style="color: purple;" >edit_note</mat-icon>
+            <input matInput placeholder="CUM" type="text" #txtCum formControlName="txtCum" maxlength="10"
+                   [readonly]="modoCaptura==='camara'" [attr.inputmode]="modoCaptura==='camara' ? 'none' : null" >
+            <mat-error *ngIf="formRegistro.get('txtCum')?.hasError('required')">
+                <mat-icon>warning_amber</mat-icon> el CUM es requerido  
+             </mat-error>
+             <mat-error *ngIf="formRegistro.get('txtCum')?.hasError('minlength')">
+                <mat-icon>warning_amber</mat-icon> Debe ser un valor válido 
+             </mat-error>
+        </mat-form-field>
+        <app-boton-escaner *ngIf="modoCaptura==='camara'" (leido)="alEscanear('txtCum', $event)"></app-boton-escaner>
+        </div>
+        
+
+        <table  *ngIf="avisopulsera" class="table table-sm table-responsive tabla-datos" style="background-color:rgba(255, 255, 255, 0);">
+         <thead> </thead>
+         <tbody>
+          <tr>
+            <td rowspan="2" style="text-align: center; background-color:rgba(255, 255, 255, 0);"> <img [src]="imagePath" class="img-thumbnail rounded" width="100" height="100" >     
+               <br>
+               <label  class="form label alert alert-success" style="color: white;" *ngIf="avisoTipoPulsera.length>0"
+               [ngStyle]="{'background-color': colorTipoPulsera}" > {{ avisoTipoPulsera }}</label>
+            </td>  
+            <td style="background-color:rgba(255, 255, 255, 0);"> 
+               <label *ngIf="this.itemToEdit.nombre"
+               [ngClass]="this.idPaquete==0? 'form label alert alert-info':'form label alert alert-success'"
+                 > &#x2022;<b>Nombre:</b> {{ nombreRegistro }}</label> 
+            </td>
+            <td style="background-color:rgba(255, 255, 255, 0);"> 
+                   <label  *ngIf="avisopulsera"
+                   [ngClass]="this.idPaquete>0 && this.validacionUsuario!? 'form label alert alert-success':'form label alert alert-info'"
+                   > {{ avisopulsera }}</label>  &nbsp;             
+            </td>
+          </tr>
+          <tr>  
+             <td colspan="2" style="background-color:rgba(255, 255, 255, 0);">
+               <table 
+               class="table table-sm table-striped table-hover tabla-eventos"  style="width:80%"   >
+                <tbody>
+                   <tr><th>Evento(s):</th></tr>
+                   <tr *ngFor="let item of  arrEventos ">
+                       <td><label  *ngIf="nombreEvento.length>0" style="font-size: small;" >{{item}}  </label></td>
+                   </tr> 
+                </tbody>
+               </table> 
+             </td>
+           </tr>
+          
+         </tbody>
+       </table>
+
+
+  
+        <div class="campo-escaner">
+        <mat-form-field  style="width:100%; max-width:240px;" [@mostrarTrigger]="estado" class="neon-shadow"  [subscriptSizing]="modoCaptura==='camara' ? 'dynamic' : 'fixed'">
+            <mat-icon matPrefix style="color: purple;" >edit_note</mat-icon>
+            <input matInput placeholder="Pulsera" type="text" #txtPulsera formControlName="txtPulsera" minlength="5"  maxlength="10"
+                   [readonly]="modoCaptura==='camara'" [attr.inputmode]="modoCaptura==='camara' ? 'none' : null" >
+             <mat-error *ngIf="formRegistro.get('txtPulsera')?.hasError('required')">
+                <mat-icon>warning_amber</mat-icon> Valor de Pulsera es requerida  
+             </mat-error>
+             <mat-error *ngIf="formRegistro.get('txtPulsera')?.hasError('minlength')">
+                <mat-icon>warning_amber</mat-icon> Debe ser un valor válido 
+             </mat-error> 
+        </mat-form-field>
+        <app-boton-escaner *ngIf="modoCaptura==='camara'" (leido)="alEscanear('txtPulsera', $event)"></app-boton-escaner>
+        </div>
+       
+
+
+
+ 
+     
+         <div class="row text-center" *ngIf= "this.ValidaValores()" [@mostrarTriggerLeft]="estado" > 
+            <div class="fila-botones"> 
+                 <button mat-raised-button style="color:white; " color="accent" [disabled]="formRegistro.invalid" type="submit"  >
+                  <i class="fa fa-feather efecto-spin" ></i>&nbsp;Guardar</button>
+                  <button mat-raised-button color="basic"    
+                   style="color: rgb(255, 255, 255); background-color:#b76e2e96;" (click)="cleanForm()" >
+                    <i class="fa fa-broom efecto-slide" ></i>&nbsp;Limpiar/Nuevo</button>         
+                   
+            </div>
+         </div>  
+    </form>  
+
+    </div>
+
+  </div> 
+ 
+  </div>
+  
+  </div>
+ 
+<!--   <div class="row">
+    {{formRegistro.value | json}}
+  </div>
+ -->

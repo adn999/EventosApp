@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Eventos Scouts</string>
+    <string name="title_activity_main">Eventos Scouts</string>
+    <string name="package_name">mx.org.scouts.eventos</string>
+    <string name="custom_url_scheme">mx.org.scouts.eventos</string>
+    <string name="widget_descripcion">Indicadores del evento y acceso directo a Registro, Kit y Consulta.</string>
+    <string name="widget_avance_descripcion">Gráfica de línea con el avance del evento cada 12 horas.</string>
+    <string name="widget_anillo_descripcion">Anillo con la asistencia del evento.</string>
+    <string name="atajo_registro">Registro</string>
+    <string name="atajo_registro_largo">Abrir Registro</string>
+    <string name="atajo_kit">Kit</string>
+    <string name="atajo_kit_largo">Abrir Kit</string>
+    <string name="atajo_consulta">Consulta</string>
+    <string name="atajo_consulta_largo">Abrir Consulta</string>
+    <string name="atajo_kpis">Indicadores</string>
+    <string name="atajo_kpis_largo">Abrir Indicadores</string>
+</resources>

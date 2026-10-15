@@ -1,0 +1,95 @@
+<app-navbar></app-navbar>
+
+
+
+<div class="protec-bg"></div>
+
+    <div class="row"[@mostrarTriggerCollapse]="estado" >
+        <div class="col-md-12">
+         <div class="text-center"></div>
+         <mat-toolbar color="primary"  style=" background-color:rgb(94, 139, 165);  font-size:x-large;"  >
+         <span>Protecció a la Membresía</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <img class="rounded" src="../../../assets/logoScout.png" width="60" height="60">
+         </mat-toolbar>
+         <br>
+        </div>
+    </div>
+
+
+<div class="d-flex justify-content-center align-items-center">
+
+  <div class="row" >
+
+    <div class="col-md-12">
+    <h6 class="text-center">
+        <mat-icon matPrefix style="color: purple;" >verified_user</mat-icon>
+        Registrar Miembro del Evento </h6>           
+    <form [formGroup]="formRegistro" (ngSubmit)="saveItem()" >
+        
+        <mat-form-field  style="width:100%;"  [@mostrarTrigger]="estado" class="neon-shadow" >
+            <mat-icon matPrefix style="color: purple;" >edit_note</mat-icon>
+            <input matInput placeholder="Pulsera..." type="text" #txtPulsera formControlName="txtPulsera"  maxlength="10" minlength="10"  >
+             <mat-error *ngIf="formRegistro.get('txtPulsera')?.hasError('minlength')">
+                <mat-icon>warning_amber</mat-icon> Debe ser un valor válido 
+             </mat-error> 
+        </mat-form-field> 
+
+
+        <table  *ngIf="avisoPulsera.length>0" class="table table-borderless table-striped" style="background-color:palevioletred;">
+          <thead> </thead>
+          <tbody>
+           <tr>
+             <td rowspan="2" style="text-align: center;"> <img [src]="imagePath" class="img-thumbnail rounded" width="100" height="100" >     
+                <br>
+                <label  class="form label alert alert-success" style="color: white;" *ngIf="avisoTipoPulsera.length>0"
+                [ngStyle]="{'background-color': colorTipoPulsera}" > {{ avisoTipoPulsera }}</label>
+             </td>        
+             <td>  <label *ngIf="avisoPulsera.length>0" [ngClass]="this.validacionGral!? 'form label alert alert-success':'form label alert alert-warning'"
+                    > {{ avisoPulsera }}</label>
+             </td>
+             <td> 
+             </td>
+           </tr>
+           <tr>
+              <td> 
+                <label  [ngClass]="this.validacionGral!? 'form label alert alert-success':'form label alert alert-primary'"
+                > &#x2022;<b>Pulsera:</b> {{ lblPulsera }} <br>  &#x2022;<b>CUM:</b> {{lblCum}}<br> &#x2022;<b>Nombre:</b>{{lblNombre}}</label>       
+              </td>
+              <td colspan="2">
+                <table 
+                class="table table-sm table-striped table-hover"  style="width:80%"   >
+                 <tbody>
+                    <tr><th>Evento(s):</th></tr>
+                    <tr *ngFor="let item of  arrEventos ">
+                        <td> <label *ngIf="nombreEvento.length>0" style="font-size: small;" >{{item}}</label></td>
+                    </tr> 
+                 </tbody>
+                </table> 
+              </td>
+            </tr>       
+          </tbody>
+        </table>
+
+    
+         <div class="row text-center"  [@mostrarTriggerLeft]="estado" > 
+            <div > 
+                 <button mat-raised-button style="color:white; " color="accent" [disabled]="formRegistro.invalid" type="submit"  >
+                  <i class="fas fa-gavel fa-xl efecto-spin" ></i>&nbsp;&nbsp;Registrar</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <button mat-raised-button color="basic"      
+                   style="color: rgb(242, 239, 242); background-color:#b76e2e96;" (click)="cleanForm()" >
+                    <i class="fa fa-broom fa-xl efecto-slide" ></i>&nbsp;&nbsp;Limpiar Pantalla </button>         
+            </div>
+         </div>  
+    </form>  
+
+    </div>
+
+  </div> 
+ 
+</div>
+
+ 
+<!--   <div class="row">
+    {{formRegistro.value | json}}
+  </div>
+ -->

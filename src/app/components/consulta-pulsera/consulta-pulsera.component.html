@@ -1,0 +1,112 @@
+<app-navbar></app-navbar>
+
+
+<div class="consulta-bg"></div>
+
+    <div class="row" [@mostrarTriggerCollapse]="estado" >
+        <div class="col-md-12"  > 
+         <mat-toolbar color="primary"  style=" background-color:rgb(94, 139, 165);  font-size:x-large;"  >
+          <span>Consultar </span>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <img class="rounded" src="../../../assets/logoScout.png" width="60" height="60">
+        </mat-toolbar>
+         <br>
+        </div>
+    </div>
+
+  <div class="d-flex justify-content-center align-items-center">
+   <div class="row mx-0 w-100" >
+
+    <div class="col-12">
+    <h6 class="text-center">
+        <mat-icon matPrefix style="color: purple;"  [@triggResult]="nombreEvento.length>0" >settings_overscan</mat-icon>
+        Captura la Pulsera o CUM a Consultar </h6>
+
+    <app-modo-captura clave="consulta-pulsera" [(modo)]="modoCaptura"></app-modo-captura>
+    <br>
+    <form [formGroup]="formRegistro" (ngSubmit)="saveItem()" style="width: 100%;" >
+        
+        <div class="campo-escaner">
+        <mat-form-field  style="width:100%; max-width:240px;"  [@mostrarTrigger]="estado" class="neon-shadow"  [subscriptSizing]="modoCaptura==='camara' ? 'dynamic' : 'fixed'">
+            <mat-icon matPrefix style="color: purple;" >edit_note</mat-icon>
+            <input matInput placeholder="Pulsera o CUM" type="text" #txtPulsera formControlName="txtPulsera"  maxlength="10"
+                   [readonly]="modoCaptura==='camara'" [attr.inputmode]="modoCaptura==='camara' ? 'none' : null" >
+             <mat-error *ngIf="formRegistro.get('txtPulsera')?.hasError('minlength')">
+                <mat-icon>warning_amber</mat-icon> Debe ser un valor válido 
+             </mat-error> 
+        </mat-form-field>
+        <app-boton-escaner *ngIf="modoCaptura==='camara'" etiqueta="Escaneo continuo" titulo="Consulta · escaneo continuo" [procesar]="procesarContinuo"></app-boton-escaner>
+        </div>
+
+        <div class="row text-center"  [@mostrarTriggerLeft]="estado"  > 
+          <div class="fila-botones"> 
+               <button mat-raised-button style="color:white; " color="accent" [disabled]="formRegistro.invalid" type="submit" >
+                <i class="fas fa-binoculars efecto-spin"></i> &nbsp;Consultar
+               </button>
+                <button mat-raised-button color="basic"   #btnLimpiar 
+                 style="color: rgb(246, 241, 246); background-color:#b76e2e96;" (click)="cleanForm()" >
+                  <i class="fa fa-broom efecto-slide" ></i>&nbsp;Limpiar Consulta</button>         
+          </div>
+       </div>  
+       
+
+       <div [hidden]="nombreEvento.length==0"  [@triggResult]="nombreEvento.length>0" >
+        <br>
+
+
+        <table class="table table-borderless table-striped tabla-datos" style="background-color: rgba(255, 255, 255, 0);">
+          <thead> </thead>
+          <tbody>
+           <tr>
+             <td rowspan="2" style="text-align: center; background-color: rgba(255, 255, 255, 0);" > <img [src]="imagePath" class="img-thumbnail rounded" width="100" height="100" >     
+                <br>
+                <label  class="form label alert alert-success" style="color: white;" *ngIf="avisoTipoPulsera.length>0"
+                [ngStyle]="{'background-color': colorTipoPulsera}" > {{ avisoTipoPulsera }}</label>
+             </td>
+             <td style="background-color: rgba(255, 255, 255, 0);"><label  class="form label alert alert-success"  > {{ avisoEntrasaSalida }}</label></td>
+             <td style="background-color: rgba(255, 255, 255, 0);">  <label  [ngClass]="this.idEvento>0 && this.validacionGral!? 'form label alert alert-success':'form label alert alert-warning'"
+                    > {{ avisopulsera }}</label>
+             </td>
+           </tr>
+           <tr>
+              <td style="background-color: rgba(255, 255, 255, 0);"> 
+                <label  [ngClass]="this.idEvento>0 && this.validacionGral!? 'form label alert alert-success':'form label alert alert-primary'"
+                  > &#x2022;<b>Pulsera:</b> {{ lblPulsera }} <br>
+                    &#x2022;<b>CUM:</b> {{lblCUM}}<br>
+                    &#x2022;<b>Nombre:</b>{{lblNombre}}</label>
+                
+              </td>
+              <td colspan="2" style="background-color: rgba(255, 255, 255, 0);">
+                <table 
+                class="table table-sm table-striped table-hover tabla-eventos"  style="width:80%"   >
+                 <tbody>
+                    <tr><th>Evento(s):</th></tr>
+                    <tr *ngFor="let item of  arrEventos ">
+                        <td  >  <label  *ngIf="nombreEvento.length>0" style="font-size: small;" >{{item}}  </label></td>
+                    </tr> 
+                 </tbody>
+                </table> 
+              </td>
+            </tr>
+           
+          </tbody>
+        </table>
+
+      
+      </div>
+    <br>
+     
+       
+    </form>  
+
+    </div>
+
+   </div> 
+  </div>
+ 
+ 
+ 
+<!--   <div class="row">
+    {{formRegistro.value | json}}
+  </div>
+ -->

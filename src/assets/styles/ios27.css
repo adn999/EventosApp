@@ -1,0 +1,161 @@
+/* =====================================================================
+   AJUSTES iOS 27 — se carga después de liquid-glass.css y tema-oscuro.css
+   ---------------------------------------------------------------------
+   Cada bloque se puede quitar por separado; para quitar todo, borrar este
+   archivo y su línea en angular.json.
+     1. Vidrio más legible (iOS 27 bajó la transparencia por defecto)
+     2. Aumentar contraste (Ajustes > Accesibilidad > Pantalla y tamaño de texto)
+     3. Letra del sistema y tamaño de texto del usuario (Dynamic Type, solo app de iOS)
+     4. Avisos (SweetAlert) con el aspecto de las alertas de iOS 27
+   ===================================================================== */
+
+
+/* ---------------------------------------------------------------------
+   1. VIDRIO MÁS LEGIBLE — más relleno y más desenfoque sobre fondos con foto/video
+   --------------------------------------------------------------------- */
+:root {
+  --lg-blur: 26px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --lg-fill: rgba(255, 255, 255, 0.40);
+    --lg-fill-strong: rgba(255, 255, 255, 0.60);
+    --lg-fill-hover: rgba(255, 255, 255, 0.50);
+  }
+  .lg-glass { background: linear-gradient(145deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.32)); }
+  .lg-toolbar { background: linear-gradient(145deg, rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.36)) !important; }
+  .lg-field { background: rgba(255, 255, 255, 0.55); }
+  .lg-scope .form-select { background-color: rgba(255, 255, 255, 0.56); }
+  .lg-scope .mat-mdc-form-field .mat-mdc-text-field-wrapper { background: rgba(255, 255, 255, 0.56) !important; }
+  .lg-scope .table:not(.table .table) { background: linear-gradient(145deg, rgba(255, 255, 255, 0.60), rgba(255, 255, 255, 0.40)); }
+  .lg-scope .chart-card { background: linear-gradient(145deg, rgba(255, 255, 255, 0.60), rgba(255, 255, 255, 0.38)) !important; }
+  .lg-scope .kpi-card { background: linear-gradient(160deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.18)) !important; }
+  .lg-scope .mat-expansion-panel { background: linear-gradient(145deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.28)) !important; }
+  .lg-alert, .lg-scope .alert {
+    background: linear-gradient(145deg, rgba(var(--tint), 0.20), rgba(var(--tint), 0.08)), rgba(255, 255, 255, 0.55);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .lg-glass { background: linear-gradient(145deg, rgba(206, 200, 222, 0.52), rgba(206, 200, 222, 0.30)); }
+  .lg-scope .table:not(.table .table) { background: linear-gradient(145deg, rgba(206, 200, 222, 0.62), rgba(206, 200, 222, 0.40)); }
+  .lg-card, .lg-scope .kpi-card, .lg-scope .chart-card {
+    background: linear-gradient(145deg, rgba(206, 200, 222, 0.64), rgba(206, 200, 222, 0.38)) !important;
+  }
+  .navbar.lg-navbar,
+  .navbar.lg-navbar.lg-clear,
+  .lg-scope .mat-toolbar,
+  .lg-toolbar,
+  .menores-banner.lg-clear,
+  .kpis-header.lg-clear {
+    background: linear-gradient(145deg, rgba(var(--lg-tinte), 0.50), rgba(var(--lg-tinte), 0.34)) !important;
+  }
+  .lg-field,
+  .lg-scope .form-control,
+  .lg-scope .form-select,
+  .lg-scope .mat-mdc-form-field .mat-mdc-text-field-wrapper { background: rgba(var(--lg-tinte), 0.44) !important; }
+}
+
+
+/* ---------------------------------------------------------------------
+   2. AUMENTAR CONTRASTE — vidrio casi sólido, bordes visibles, texto más oscuro
+   --------------------------------------------------------------------- */
+@media (prefers-contrast: more) {
+  :root {
+    --lg-text: #000;
+    --lg-text-2: rgba(0, 0, 0, 0.80);
+    --lg-stroke: rgba(60, 40, 90, 0.55);
+  }
+  .lg-glass, .navbar.lg-navbar, .lg-toolbar, .lg-card, .lg-alert, .lg-field,
+  .lg-scope .alert, .lg-scope .mat-toolbar, .lg-scope .kpi-card, .lg-scope .chart-card,
+  .lg-scope .table:not(.table .table), .lg-scope .mat-expansion-panel, .lg-scope .form-select,
+  .lg-scope .form-control, .lg-scope .mat-mdc-form-field .mat-mdc-text-field-wrapper,
+  .tabbar-telefono, .mas-panel, .swal2-popup {
+    background: rgba(252, 251, 254, 0.97) !important;
+    border: 1px solid rgba(60, 40, 90, 0.55) !important;
+  }
+  .lg-scope .btn { border: 1.5px solid rgba(40, 20, 70, 0.70) !important; text-shadow: none !important; }
+  .swal2-title, .swal2-html-container { text-shadow: none !important; color: #000 !important; }
+  .lg-alert, .lg-scope .alert { color: rgb(var(--tint)) !important; font-weight: 600; }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --lg-text: #fff;
+      --lg-text-2: rgba(255, 255, 255, 0.85);
+      --lg-stroke: rgba(235, 230, 245, 0.70);
+    }
+    .lg-glass, .navbar.lg-navbar, .lg-toolbar, .lg-card, .lg-alert, .lg-field,
+    .lg-scope .alert, .lg-scope .mat-toolbar, .lg-scope .kpi-card, .lg-scope .chart-card,
+    .lg-scope .table:not(.table .table), .lg-scope .mat-expansion-panel, .lg-scope .form-select,
+    .lg-scope .form-control, .lg-scope .mat-mdc-form-field .mat-mdc-text-field-wrapper,
+    .tabbar-telefono, .mas-panel, .swal2-popup {
+      background: rgba(44, 38, 58, 0.97) !important;
+      border-color: rgba(235, 230, 245, 0.70) !important;
+    }
+    .swal2-title, .swal2-html-container { color: #fff !important; }
+  }
+}
+
+
+/* ---------------------------------------------------------------------
+   3. LETRA DEL SISTEMA — SF Pro en iPhone/iPad/Mac, Roboto en Android
+   En la app de iOS además sigue el tamaño de texto que el usuario elige en Ajustes
+   (la clase es-ios la pone main.ts). Los íconos (Font Awesome, mat-icon) conservan su fuente.
+   --------------------------------------------------------------------- */
+:root {
+  --fuente-sistema: -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mdc-typography-font-family: var(--fuente-sistema);
+  --mat-option-label-text-font: var(--fuente-sistema);
+  --mat-select-trigger-text-font: var(--fuente-sistema);
+  --mdc-filled-text-field-label-text-font: var(--fuente-sistema);
+  --mat-form-field-container-text-font: var(--fuente-sistema);
+  --mdc-protected-button-label-text-font: var(--fuente-sistema);
+  --mdc-text-button-label-text-font: var(--fuente-sistema);
+  --mat-expansion-header-text-font: var(--fuente-sistema);
+  --mat-expansion-container-text-font: var(--fuente-sistema);
+  --mat-menu-item-label-text-font: var(--fuente-sistema);
+  --mat-paginator-container-text-font: var(--fuente-sistema);
+  --mat-toolbar-title-text-font: var(--fuente-sistema);
+}
+body,
+.mat-typography, .mat-typography h1, .mat-typography h2, .mat-typography h3, .mat-typography h4,
+.mat-mdc-form-field, .mat-mdc-select, .mat-mdc-option, .mat-mdc-button-base, .mat-toolbar,
+.mat-expansion-panel-header, .mat-mdc-menu-item, .mat-mdc-paginator,
+.swal2-popup, .toast-container {
+  font-family: var(--fuente-sistema) !important;
+}
+
+/* Dynamic Type: el tamaño base (1rem) sigue al de Ajustes; 17 px por omisión, como iOS */
+@supports (font: -apple-system-body) {
+  html.es-ios {
+    font: -apple-system-body;
+    font-family: var(--fuente-sistema);
+  }
+}
+
+
+/* ---------------------------------------------------------------------
+   4. AVISOS — más opacos, título en semibold y botones como en iOS 27
+   --------------------------------------------------------------------- */
+@media (prefers-color-scheme: light) {
+  .swal2-popup {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.70)) !important;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .swal2-popup {
+    background: linear-gradient(160deg, rgba(212, 204, 232, 0.90), rgba(196, 188, 220, 0.84)) !important;
+  }
+}
+.swal2-popup {
+  -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
+  backdrop-filter: blur(30px) saturate(180%) !important;
+  border-radius: 34px !important;
+  padding: 1.4em 1.2em 1.2em !important;
+}
+.swal2-title { font-weight: 600 !important; font-size: 1.35em !important; letter-spacing: -0.01em; }
+.swal2-html-container { font-size: 1em !important; }
+.swal2-actions { gap: 8px; width: 100%; padding: 0 0.4em; }
+.swal2-styled { font-weight: 600 !important; min-height: 46px; flex: 1 1 0; margin: 0 !important; }
+.swal2-container.swal2-backdrop-show { background: rgba(20, 12, 40, 0.28) !important; }

@@ -1,0 +1,11 @@
+{
+  "/api-scouts": {
+    "target": "https://apis.scouts.org.mx",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api-scouts": ""
+    },
+    "logLevel": "debug"
+  }
+}

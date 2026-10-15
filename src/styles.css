@@ -1,0 +1,102 @@
+
+
+
+/*utilizado para garantizar usar el 100% del espacio disponible en el body*/
+html,body{height: 100%; width: 100%;}
+/* estilo para el overlay del spinner cuando carga el componente */
+.overlay{
+    position: fixed;
+    inset: 0;       /* sin esto la capa arrancaba unos píxeles abajo y dejaba una franja */
+    width: 100%;
+    height: 100%;
+    background-color: rgba(245, 243, 250, 0.28); /* velo claro de cristal (Liquid Glass) */
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    z-index: 1050;  /*encima de la navbar (1040) y debajo de los avisos de SweetAlert (1060)*/
+    display:flex; /*para centrar en cualquier pantalla*/
+    align-items: center;
+    justify-content: center;
+ }
+
+/*utilizado para centrar un componente en la pantalla*/
+ .wrapper{
+    background-color: rgb(255, 255, 255);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display:flex; /*para centrar en cualquier pantalla*/
+    align-items: center;
+    justify-content: center;
+ }
+
+
+ .tabla > tbody > tr:hover {
+   background-color: #F2F2F2;
+   cursor: pointer;
+ }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* El overlay de Angular Material (mat-menu, mat-select, etc.) debe estar
+   por encima del navbar-collapse (z-index: 1050) */
+.cdk-overlay-container { z-index: 2000; }
+
+/* Toastr: en iPhone/iPad los avisos de arriba quedaban debajo de la isla dinámica, el reloj, el wifi y la batería */
+#toast-container.toast-top-right, #toast-container.toast-top-left,
+#toast-container.toast-top-center, #toast-container.toast-top-full-width {
+  top: calc(env(safe-area-inset-top) + 12px);
+}
+
+/* Pantallas sin navbar: dejar libre el área del reloj en iPhone/iPad */
+app-mapa-imagen, app-test-survey, app-survey-salida, app-page-not-found {
+  display: block;
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Teléfono: espacio para la barra de pestañas inferior del navbar.
+   height:auto: con el 100% fijo, en pantallas más altas que el teléfono el relleno inferior quedaba dentro de ese 100%
+   y lo último (p. ej. Guardar / Limpiar en Registro) terminaba debajo de la barra aunque se bajara hasta el final */
+body.con-tabbar { height: auto; min-height: 100%; padding-bottom: calc(88px + env(safe-area-inset-bottom) * 0.35); }
+html.es-tablet body.con-tabbar { padding-bottom: calc(102px + env(safe-area-inset-bottom) * 0.35); }
+/* Android: la barra de gestos/navegación no es como el indicador del iPhone; se respeta completa.
+   --safe-area-inset-bottom lo inyecta Capacitor cuando el WebView no informa env() */
+html.es-android body.con-tabbar { padding-bottom: calc(88px + max(env(safe-area-inset-bottom), var(--safe-area-inset-bottom, 0px))); }
+html.es-android.es-tablet body.con-tabbar { padding-bottom: calc(102px + max(env(safe-area-inset-bottom), var(--safe-area-inset-bottom, 0px))); }
+
+/* Teléfono: sin cápsula superior, el contenido baja lo que mida el área segura (reloj / Dynamic Island) */
+html.es-telefono body.con-tabbar { padding-top: calc(env(safe-area-inset-top) + 8px); }
+
+/* iOS con barra nativa (UITabBar): el espacio inferior lo da la altura real que informa el plugin */
+html.menu-nativo body.con-tabbar { padding-bottom: calc(var(--tabbar-nativo, 90px) + 8px); }
+/* iPad con barra lateral nativa: el contenido deja libre la izquierda en vez de abajo */
+html.menu-nativo.barra-lateral body.con-tabbar { padding-bottom: 16px; padding-left: var(--lateral-nativo, 96px); }
+
+/* Campo de captura con el botón de escáner a su derecha (modo Cámara) */
+.campo-escaner { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.campo-escaner > mat-form-field { flex: 1 1 auto; min-width: 0; }
+
+
+/* Pantallas de captura (Consulta, Kit, Registro, Comida, Check In-Out): botones en una sola línea y datos que no se salen */
+.fila-botones { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: nowrap; }
+.fila-botones button { white-space: nowrap; }
+
+@media (max-width: 600px) {
+  .fila-botones { gap: 8px; padding: 0 8px; }
+  .fila-botones button { padding: 0 12px; font-size: .85rem; min-width: 0; }
+  .fila-botones i { font-size: .95rem; }
+
+  /* Datos de la persona: se apilan (foto + estado arriba, el resto debajo) y los textos se parten */
+  .tabla-datos, .tabla-datos tbody { display: block; width: 100%; }
+  .tabla-datos tr { display: flex; flex-wrap: wrap; align-items: flex-start; }
+  .tabla-datos td { display: block; flex: 1 1 100%; min-width: 0; padding: 4px 2px; }
+  /* primera fila: foto a la izquierda; a su derecha, una debajo de otra, las celdas de estado */
+  .tabla-datos tr:first-child { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 4px 6px; }
+  .tabla-datos tr:first-child td:first-child { grid-row: span 2; }
+  .tabla-datos tr:first-child td:nth-child(n+2) { grid-column: 2; }
+  .tabla-datos label.alert {
+    display: block; margin: 0; padding: 6px 8px; font-size: .8rem;
+    white-space: normal; overflow-wrap: anywhere; word-break: break-word;
+  }
+  .tabla-datos .tabla-eventos { width: 100% !important; margin: 0; }
+  .tabla-datos .tabla-eventos label { white-space: normal; overflow-wrap: anywhere; }
+}

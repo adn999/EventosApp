@@ -1,0 +1,239 @@
+
+
+  body {
+    overflow: hidden;
+  }
+
+
+
+
+/* Contenedor con video de fondo */
+.home-bg-wrapper {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  background-color: #fdfdfd;
+}
+
+.bg-video {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  position: fixed;
+  inset: 150px 0 0 0;
+  width: 100%;
+  height: calc(100% - 150px);
+  object-fit: contain;
+  object-position: center;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Color sutil de fondo (Liquid Glass): base del mismo tono que el blanco del video
+   y un velo de color encima del video, debajo del contenido */
+:host::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: #fbfbf9;
+  pointer-events: none;
+}
+
+:host::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 8% 0%, rgba(101, 50, 124, 0.20), transparent 70%),
+    radial-gradient(ellipse 65% 55% at 100% 100%, rgba(31, 138, 112, 0.20), transparent 70%),
+    radial-gradient(ellipse 45% 35% at 92% 8%, rgba(214, 150, 0, 0.11), transparent 70%),
+    linear-gradient(160deg, rgba(101, 50, 124, 0.05), rgba(31, 138, 112, 0.05));
+}
+
+.bg-overlay {
+  position: absolute;
+  inset:0 0 0 0;
+  background-color: rgba(255, 255, 255, 0.094);
+  z-index: 1;
+}
+
+
+.home-content {
+  position: relative;
+  z-index: 2;
+}
+
+
+ .logo{ opacity:0.62;}
+
+ .efecto-slide {transition: transform 0.3s ease-in-out; color:white}
+
+  .efecto-slide:hover { transform: translateX(14px); color:rgb(187, 165, 39);}
+
+
+ .efecto-spin {transition: all 0.5s ease; color: white; }
+
+ .efecto-spin:hover {transform: rotate(45deg) scale(1.4); color: rgb(203, 224, 143);}
+
+
+ .efecto-big {transition: all 0.5s ease; color:rgb(73, 64, 134); }
+
+ .efecto-big:hover {transform: scale(1); font-size: x-large; color:darkolivegreen; }
+
+
+ .efecto-big-image {transition: all 0.5s ease; color: white; }
+
+ .efecto-big-image:hover {transform: /*rotate(360deg) */ scale(1.5); }
+
+
+ .neon-image {
+  /* Ajusta el color (#ff00de) y el radio de desenfoque (10px, 20px) */
+  filter: drop-shadow(0 0 5px #fff)  drop-shadow(0 0 10px #965d0e) ;
+       
+  /* Transición suave al pasar el cursor */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Efecto hover: intensificar el brillo */
+.neon-image:hover {
+  filter: drop-shadow(0 0 10px #fff) drop-shadow(0 0 20px #965d0e) drop-shadow(0 0 40px #d7a150) ;      
+}
+
+
+
+ .neon-shadow {  filter:   drop-shadow(5px 5px 2px gray) ;    transition: all 0.3s ease-in-out; }
+
+/* Efecto hover: intensificar el brillo */
+.neon-shadow:hover { filter:drop-shadow(5px 5px 3px gray)  drop-shadow(5px 5px 5px rgb(168, 167, 167));  }
+
+
+
+.card {/* horizontal, vertical, blur, color */
+   transition: all 0.4s ease; box-shadow: 5px 5px 2px gray;
+}
+.card:hover{ box-shadow: 10px 10px 5px  rgb(155, 154, 154);}
+
+
+
+.table-transparent {
+  --bs-table-bg: transparent;
+  --bs-table-accent-bg: transparent;
+}
+
+/* Vidrio muy ligero detrás de la foto y el nombre: deja ver el video */
+/* :host en lugar de .lg-scope: .lg-scope está fuera de este componente y la
+   encapsulación de Angular no lo encontraría */
+:host .table.table-transparent:not(.table .table) {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.0)) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 4px 16px rgba(35, 20, 70, 0.05) !important;
+  overflow: visible;
+}
+
+/* Selector de evento y botón Activar */
+.home-select { width: 100%; max-width: 260px; }
+
+.mat-mdc-raised-button.btn-activar {
+  height: auto !important;          /* el texto del evento puede ocupar varias líneas */
+  min-height: 55px;
+  padding: 8px 22px !important;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+/* Celular: selector y botón uno debajo del otro, a lo ancho */
+@media (max-width: 575.98px) {
+  .home-col { display: flex; justify-content: center; margin-bottom: 8px; }
+  .home-select { max-width: none; }
+  .mat-mdc-raised-button.btn-activar { width: 100%; }
+  .home-col .select-evento-hint { left: auto; right: 10px; top: -24px; font-size: 2rem; }
+
+  /* Versión compacta para que la tarjeta tape menos el video */
+  :host .table-transparent > tbody td { padding: 6px 8px; vertical-align: middle; }
+  .home-avatar { width: 56px !important; height: 56px !important; border-width: 3px !important; }
+  .home-hola { font-size: 1.2rem; margin: 0; }
+  :host .table-transparent h5 { font-size: 0.85rem; padding: 6px 10px; margin: 0; }
+
+  :host ::ng-deep .home-select .mat-mdc-text-field-wrapper { height: 44px; }
+  :host ::ng-deep .home-select .mat-mdc-form-field-infix { min-height: 44px; padding-top: 10px !important; padding-bottom: 10px !important; }
+  :host ::ng-deep .home-select .mat-mdc-select { font-size: 0.9rem; }
+
+  .mat-mdc-raised-button.btn-activar {
+    min-height: 44px;
+    padding: 6px 18px !important;
+    font-size: 0.88rem;
+  }
+  .home-col { margin-bottom: 6px; }
+}
+
+.select-evento-hint {
+  position: absolute;
+  left: 150px;
+  top: -38px;
+  font-size: 2.8rem;
+  color: #c10ab8;
+  filter: drop-shadow(2px 2px 2px gray);
+  pointer-events: none;
+  animation: pointEventoHint 1.1s ease-in-out infinite;
+}
+
+@keyframes pointEventoHint {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(8px); }
+}
+
+@keyframes btnActivarPulse {
+  0%   { box-shadow: 0 4px 10px rgba(37, 124, 75, 0.25); transform: scale(1); }
+  15%  { box-shadow: 0 0 20px 8px rgba(180, 167, 46, 0.55); transform: scale(1.14); }
+  30%  { box-shadow: 0 4px 10px rgba(37, 124, 75, 0.25); transform: scale(1); }
+  100% { box-shadow: 0 4px 10px rgba(37, 124, 75, 0.25); transform: scale(1); }
+}
+
+.btn-activar-pulse {
+  animation: btnActivarPulse 1.5s ease-in-out infinite;
+}
+
+ 
+ 
+/* Oculta cualquier control nativo de video en WebKit (iOS) */
+.bg-video::-webkit-media-controls,
+.bg-video::-webkit-media-controls-panel,
+.bg-video::-webkit-media-controls-play-button,
+.bg-video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+/* Foto de fondo a pantalla completa; arriba se desvanece al tono claro para que el saludo y el selector se lean */
+.bg-foto {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 55%;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 120px, #000 340px);
+  mask-image: linear-gradient(to bottom, transparent 0, transparent 120px, #000 340px);
+}
+
+/* Con la barra nativa de iOS la foto se desvanece abajo, solo en la franja de la barra: el vidrio de la barra toma el tono de lo que tiene
+   detrás y sobre la foto oscura sus íconos perdían contraste */
+:host-context(html.menu-nativo) .bg-foto {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 120px, #000 340px,
+    #000 calc(100% - var(--tabbar-nativo, 90px) - 10px), transparent calc(100% - var(--tabbar-nativo, 90px) + 25px));
+  mask-image: linear-gradient(to bottom, transparent 0, transparent 120px, #000 340px,
+    #000 calc(100% - var(--tabbar-nativo, 90px) - 10px), transparent calc(100% - var(--tabbar-nativo, 90px) + 25px));
+}
+
+/* En pantallas anchas la foto se recorta arriba y abajo: se baja el encuadre para que la brújula no quede tras el saludo */
+@media (min-aspect-ratio: 1/1) {
+  .bg-foto { object-position: 50% 38%; }
+}

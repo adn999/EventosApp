@@ -1,0 +1,90 @@
+<app-navbar></app-navbar>
+<div class="jumbotron mx-3 ">
+    <h3 class="display-6 text-center">Catálogo de Eventos</h3>
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <h6 class="text-center">Listado de Eventos</h6>
+            <div class="my-2">
+               <!--  <mat-form-field >
+                    <input matInput placeholder="Buscar..."  [(ngModel)]="strCriterio" >
+                    <mat-icon matPrefix >search</mat-icon>
+                  </mat-form-field> -->
+              <div class="input-group mb-3">
+               <span class="input-group-text" id="addonSearch"><mat-icon matPrefix >search</mat-icon></span>
+               <input type="text" class="form-control"placeholder="Buscar..." aria-describedby="addonSearch" 
+                 [(ngModel)]="strCriterio"/>
+              </div>
+   
+            </div>
+            <table class="table table-striped table-hover">
+             <tbody>
+                <tr *ngFor="let item of   this.listQuizzes | jsonFilterBy:[this.strCriterio,'nombreEncuesta'] | slice:desde:hasta ">
+                    <th>{{item.idAgrupador}}</th>
+                    <td>{{item.nombreEncuesta}}</td>
+                    <td>
+                        <button mat-mini-fab color="primary" type="button" (click)="editItem(item);" >
+                        <i class="fas fa-edit  "></i> </button>
+                    </td>
+                    <!-- <td>
+                         <i class="far fa-trash-alt fa-lg text-danger" (click)="eliminarTarjeta(item.idAgrupador)" style="cursor:pointer;"></i> 
+                    </td> -->
+                </tr> 
+             </tbody>
+            </table> 
+            <mat-paginator [length]="this.listQuizzes.length"
+              [pageSize]="pageSize"  [pageSizeOptions]="[25,50,100]"
+              (page)="cambiarPagina($event)"
+              aria-label="Select page">
+            </mat-paginator>
+
+        </div>
+        <div class="col-md-6">
+            <h6 class="text-center">Agregar/Editar Evento </h6>           
+            <form [formGroup]="formQuizz" (ngSubmit)="saveItem()" >
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text bg-white">
+                                <mat-icon>draw</mat-icon>
+                                <!-- <i class="fa-solid fa-feather fa-xl" ></i> -->
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Titulo del Evento..." 
+                        #txtnombreEncuesta formControlName="nombreEncuesta" > 
+                    </div>
+                </div>
+          
+                <div class="row text-center" >
+                    <div>
+                        <!-- disabled deshabilita si no cumple todos los req del controlador component -->
+                       <!--  <button class="btn btn-outline-success  " [disabled]="formQuizz.invalid" type="submit">
+                             <i class="fas fa-database"></i> Guardar</button>   -->  
+                         <button mat-raised-button color="accent" [disabled]="formQuizz.invalid" type="submit">
+                          <mat-icon>save</mat-icon>Guardar</button> 
+                        
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+ 
+
+ 
+
+<!-- <div >
+  <button mat-raised-button>Basic</button>
+  <button mat-raised-button color="primary">Primary  <mat-icon>mic</mat-icon>   </button>
+  <button mat-raised-button color="accent">Accent</button>
+  <button mat-raised-button color="warn">Warn</button>
+  <button mat-raised-button disabled>Disabled</button>
+  <a mat-raised-button routerLink=".">Link</a>
+</div> -->
+
+
+
+
+
+ 

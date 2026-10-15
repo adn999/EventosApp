@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Accesos al mantener pulsado el icono de la app; abren la misma pantalla que los botones del widget -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut android:shortcutId="registro" android:enabled="true" android:icon="@drawable/ic_widget_registro"
+        android:shortcutShortLabel="@string/atajo_registro" android:shortcutLongLabel="@string/atajo_registro_largo">
+        <intent android:action="android.intent.action.VIEW" android:data="eventosscouts://registro"
+            android:targetPackage="mx.org.scouts.eventos" android:targetClass="mx.org.scouts.eventos.MainActivity" />
+    </shortcut>
+    <shortcut android:shortcutId="kit" android:enabled="true" android:icon="@drawable/ic_widget_kit"
+        android:shortcutShortLabel="@string/atajo_kit" android:shortcutLongLabel="@string/atajo_kit_largo">
+        <intent android:action="android.intent.action.VIEW" android:data="eventosscouts://kit"
+            android:targetPackage="mx.org.scouts.eventos" android:targetClass="mx.org.scouts.eventos.MainActivity" />
+    </shortcut>
+    <shortcut android:shortcutId="consulta" android:enabled="true" android:icon="@drawable/ic_widget_consulta"
+        android:shortcutShortLabel="@string/atajo_consulta" android:shortcutLongLabel="@string/atajo_consulta_largo">
+        <intent android:action="android.intent.action.VIEW" android:data="eventosscouts://consulta"
+            android:targetPackage="mx.org.scouts.eventos" android:targetClass="mx.org.scouts.eventos.MainActivity" />
+    </shortcut>
+    <shortcut android:shortcutId="kpis" android:enabled="true" android:icon="@drawable/logo_scout"
+        android:shortcutShortLabel="@string/atajo_kpis" android:shortcutLongLabel="@string/atajo_kpis_largo">
+        <intent android:action="android.intent.action.VIEW" android:data="eventosscouts://kpis"
+            android:targetPackage="mx.org.scouts.eventos" android:targetClass="mx.org.scouts.eventos.MainActivity" />
+    </shortcut>
+</shortcuts>

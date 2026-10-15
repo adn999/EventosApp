@@ -1,0 +1,99 @@
+
+
+
+<!-- <div class="wrapper" 
+
+style="background-image:url('../../assets/evento.jpg'); background-position:center; background-repeat: no-repeat; background-blend-mode:overlay; background-color: rgba(255, 255, 255, 0.68); " 
+
+> -->
+
+
+<div class="login-wrapper" (click)="playBgVideo()">
+
+  <!-- Video de fondo -->
+  <video #bgVideo class="bg-video" autoplay muted loop playsinline webkit-playsinline disablePictureInPicture disableRemotePlayback controlsList="nodownload nofullscreen noremoteplayback" tabindex="-1" aria-hidden="true">
+    <source src="assets/background_login.mp4" type="video/mp4">
+  </video> 
+
+  <!-- Orbs de fondo animados -->
+  <span class="orb orb-1"></span>
+  <span class="orb orb-2"></span>
+  <span class="orb orb-3"></span>
+
+  <!-- hojas flotantes -->
+  <span class="fleur fleur-1">🌿</span>
+  <span class="fleur fleur-2">🌱</span>
+  <span class="fleur fleur-3">☘️</span>
+  <span class="fleur fleur-4">🌱</span>
+
+  <!-- Tarjeta de login -->
+  <div class="login-card lg-clear">
+
+    <!-- Sección de logo -->
+    <div class="logo-section" [@mostrarTrigger]="estado">
+      <div class="logo-ring">
+        <img class="logo" src="../../../assets/logoScout.png" alt="Scout">
+      </div>
+      <span class="org-label">EVENTOS</span>
+    </div>
+
+    <h3 class="form-title" [@mostrarTriggerLeft]="estado">Iniciar Sesión</h3>
+
+    <form #loginForm="ngForm" (ngSubmit)="onLogin();">
+
+      <!-- Campo CUM -->
+      <div class="field-group" [@mostrarTrigger]="estado">
+        <div class="field-wrap">
+          <i class="fa fa-id-card field-icon"></i>
+          <input type="text" maxlength="10" class="field-input" placeholder=" "
+            [(ngModel)]="localCUM" required #cum="ngModel" name="cum" id="cum">
+          <label class="field-label" for="cum">CUM</label>
+          <span class="field-bar"></span>
+        </div>
+      </div>
+
+      <!-- Campo contraseña -->
+      <div class="field-group" [@mostrarTrigger]="estado">
+        <div class="field-wrap">
+          <i class="fa fa-lock field-icon"></i>
+          <input [type]="showPassword ? 'text' : 'password'" class="field-input" placeholder=" "
+            [(ngModel)]="localPass" required #pass="ngModel" name="pass" id="pass">
+          <label class="field-label" for="pass">Contraseña</label>
+          <span class="field-bar"></span>
+          <button type="button" class="pass-toggle" (click)="toggleShow()">
+            <i class="fa" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Botón Ingresar -->
+      <div class="btn-section" [@mostrarTriggerCollapse]="estado">
+        <button type="submit" (click)="toggle()" class="btn-login"
+          [disabled]="localPass.length == 0 || localCUM.length == 0">
+          <span class="btn-text">Ingresar</span>
+          <i class="fa fa-arrow-right btn-arrow"></i>
+          <span class="btn-shine"></span>
+        </button>
+      </div>
+
+      <!-- Face ID / huella (solo app nativa, opcional) -->
+      <div class="bio-section" *ngIf="metodoBiometrico && biometriaGuardada">
+        <button type="button" class="btn-bio" (click)="onLoginBiometrico()">
+          <i class="fa fa-fingerprint"></i> Entrar con {{metodoBiometrico}}
+        </button>
+        <a class="bio-off" (click)="desactivarBiometria()">Desactivar</a>
+      </div>
+
+    </form>
+  </div>
+
+
+</div>
+
+<!-- Overlay de carga -->
+<div class="loading-overlay" *ngIf="isVisible">
+  <div class="loading-card" [@visibleHidden]="isVisible ? 'visible' : 'hidden'">
+    <span class="lg-spinner lg-spinner--lg"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    <p class="loading-text">Conectando...</p>
+  </div>
+</div>

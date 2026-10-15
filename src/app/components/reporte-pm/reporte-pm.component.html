@@ -1,0 +1,82 @@
+<app-navbar></app-navbar>
+
+
+<div class="protec-bg"></div>
+
+<div class="mx-3 ">
+    <!-- <h6 class="display-6 text-center">Catálogo de Preguntas</h6> -->
+    <div class="row">
+        <div class="col-md-12">
+         <div class="text-center"></div>
+
+    <mat-toolbar color="primary"  style=" background-color:rgb(94, 139, 165);  font-size:x-large;"  ><span>Reporte Protección a la Membresía</span></mat-toolbar>
+   <br>
+   
+               <mat-form-field color="primary" style="color: purple;" class="neon-shadow" >
+                <mat-icon matPrefix >hub</mat-icon>
+                <mat-select placeholder="Elija un Evento..."  [(ngModel)] ="strCriterio"
+                  (selectionChange)="loadRegistros();"  >
+                  <mat-option *ngFor="let item of listMacroEventos" [value]="item" class="efecto-big" >
+                  <mat-icon style="color: purple;">format_list_numbered</mat-icon>  {{item}}
+                  </mat-option>
+                </mat-select>
+                </mat-form-field>
+              
+                  <mat-accordion>
+                    <ng-container *ngIf="this.listRegistros.length>0" >
+                   <mat-expansion-panel [expanded]="panelOpenState===false" (opened)="panelOpenState = false" (closed)="panelOpenState = true" >
+                    <mat-expansion-panel-header style="background-color: rgb(217, 237, 248);" >
+                      <mat-panel-title><mat-icon>list_alt</mat-icon>Registro </mat-panel-title>
+                      <mat-panel-description>Contenido</mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                        <table id="tblRegistros" class="table table-striped table-hover"  >
+                         <thead>
+                          <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">MacroEvento</th>
+                            <th scope="col">CUM PM</th>
+                            <th scope="col">CUM</th>
+                            <th scope="col">Fecha</th>
+                          </tr>
+                         </thead>
+                         <tbody>
+                            <tr *ngFor="let item of this.listRegistros | slice:desde:hasta ">
+                                <th>{{item.id}}</th>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.macroEvento}}</textarea></td>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.cumpm}}</textarea></td>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.cum}}</textarea></td>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.fecha}}</textarea></td>
+                            </tr> 
+                         </tbody>
+                        </table> 
+                        <div class="row">
+                          <div class="col-md-4">
+                            <button mat-mini-fab color="accent" type="button" (click)="exportexcel();" >
+                            <i class="fas fa-file-excel  "></i> </button>
+                          </div>
+                          <div class="col-md-8">
+                            <mat-paginator 
+                            [length]="this.listRegistros.length"
+                            [pageSize]="pageSize"  [pageSizeOptions]="[10,25,50]"
+                            (page)="cambiarPagina($event)"
+                            aria-label="Select page">
+                          </mat-paginator>
+                        </div>
+                        </div>
+
+                    </mat-expansion-panel>
+                    </ng-container>
+                </mat-accordion>
+
+                <mat-panel-title mat-card appearance="outlined" *ngIf="this.listRegistros.length==0 && this.strCriterio.length>0" >No hay elementos localizados en este Evento</mat-panel-title>
+                   
+               
+        </div>
+    </div>
+    <div class="row">
+        
+    
+     <!-- <pre>{{formQuestion.value | json}}</pre>  -->
+    </div>
+</div>

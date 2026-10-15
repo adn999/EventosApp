@@ -1,0 +1,150 @@
+<app-navbar></app-navbar>
+
+
+<div class="eats-bg"></div>
+
+<div class="mx-3 ">
+    <h3 class="display-6 text-center neon-shadow" >Catálogo de Comida</h3>
+    <div class="row">
+        <div class="col-md-12">
+         <div class="text-center"></div>
+
+   <br>
+        <div class="row" >
+            <div class="col-md-6">
+            <mat-form-field style="color:rgb(13, 72, 62); width:100%; max-width:250px;" class="neon-shadow" > 
+              <mat-icon matPrefix >style</mat-icon>
+                <mat-select placeholder="Elija un MacroEvento"    [(ngModel)] ="macroEventoSelected"
+                (selectionChange)="loadEventos();" >
+                <mat-option *ngFor="let item of listMacroEventos" [value]="item" class="efecto-big" >
+                   <i class="fas fa-compass fa-xl efecto-spin" style="color: darkslategray;"></i>&nbsp;&nbsp; {{item}}
+                </mat-option>
+                </mat-select>
+            </mat-form-field> 
+            </div>
+
+            <div class="col-md-6">
+             <mat-form-field color="primary"  style="color: rgb(171, 112, 23); width:100%; max-width:450px;" class="neon-shadow" >
+                <mat-icon matPrefix >hub</mat-icon>
+                <mat-select placeholder="Elija un Evento..."  [(ngModel)] ="eventoSelected"
+                  (selectionChange)="loadComidas();"  >
+                  <mat-option *ngFor="let itemEvento of listEventos" [value]="itemEvento.idEvento" class="efecto-big" >
+                  <i class="fas fa-hiking fa-xl efecto-slide" style="color: darkorange;"></i>&nbsp;&nbsp;  {{itemEvento.nombre}}
+                  </mat-option>
+                </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+ 
+              
+                  <mat-accordion>
+                    <ng-container *ngIf="this.eventoSelected>0" >
+                   <mat-expansion-panel [expanded]="panelOpenState===false" (opened)="panelOpenState = false" (closed)="panelOpenState = true" >
+                    <mat-expansion-panel-header style="background-color: rgb(217, 237, 248);" >
+                      <mat-panel-title><mat-icon>list_alt</mat-icon>Comida </mat-panel-title>
+                      <mat-panel-description>Contenido</mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                        <div class="table-responsive">
+                        <table id="tblComidasEvento" class="table table-striped table-hover"  >
+                         <thead>
+                          <tr>
+                            <th scope="col">IdComidaEv</th>
+                            <th scope="col">IdEvento</th>
+                            <th scope="col">Descripcion</th>
+                            <th scope="col">Fecha</th>
+                          </tr>
+                         </thead>
+                         <tbody>
+                            <tr *ngFor="let item of this.listVistaComidasEvento | slice:desde:hasta ">
+                                <th>{{item.idComida_Evento}}</th>
+                                <td>{{item.idEvento}}</td>
+                                <td><textarea rows="1"   class="form-control" style="font-size: small;" disabled >{{item.descripcionComida}}</textarea></td>
+                                <td>{{formatoFecha( item.fecha) }}</td>
+                              
+                                <td><button mat-mini-fab color="primary" type="button" (click)="editItem(item);" class="neon-shadow" >
+                                    <i class="fas fa-edit efecto-spin"></i> </button>
+                                </td>
+                            </tr> 
+                         </tbody>
+                        </table>
+                        </div> 
+                        <div class="row">
+                          <div class="col-md-4">
+                            <button mat-mini-fab color="accent" type="button" (click)="exportexcel();" >
+                            <i class="fas fa-file-excel  "></i> </button>
+                          </div>
+                          <div class="col-md-8">
+                            <mat-paginator 
+                            [length]="this.listVistaComidasEvento.length"
+                            [pageSize]="pageSize"  [pageSizeOptions]="[10,25,50]"
+                            (page)="cambiarPagina($event)"
+                            aria-label="Select page">
+                          </mat-paginator>
+                        </div>
+                        </div>
+
+                    </mat-expansion-panel>
+                    </ng-container>
+
+                    <ng-container *ngIf="this.eventoSelected>0" >
+                    <mat-expansion-panel [expanded]="panelOpenState===true" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                      <mat-expansion-panel-header style="background-color: rgb(236, 221, 240);" >
+                        <mat-panel-title><mat-icon>format_list_numbered</mat-icon>Detalle de las Preguntas </mat-panel-title>
+                        <mat-panel-description> </mat-panel-description>
+                      </mat-expansion-panel-header>
+                       
+                        <div class="col-md-12">
+                           <h6 class="text-center">Agregar/Editar Pregunta </h6>           
+                            <form [formGroup]="formQuestion" (ngSubmit)="saveItem()" >
+
+                               <mat-form-field style="color:purple;" class="neon-shadow" > <mat-icon matPrefix >bubble_chart</mat-icon>
+                                   <mat-select placeholder="Elija un Tipo..."   #selectTipo formControlName="selectTipo" 
+                                    (selectionChange)="setValidatorOpciones();" >
+                                     <mat-option *ngFor="let item of listcatComidas" [value]="item.idComida" >
+                                        <mat-icon style="color: purple;">short_text</mat-icon>{{item.descripcion}}
+                                     </mat-option>
+                                   </mat-select>
+                                   <mat-error *ngIf="formQuestion.get('selectTipo')?.hasError('required')">
+                                       <mat-icon>warning_amber</mat-icon> Favor de elegir un Tipo</mat-error>
+                                      <!-- <mat-hint>{{ formQuestion.get('selectTipo')?.value}}</mat-hint>  -->
+                               </mat-form-field> 
+               
+                                <br><br>
+
+                               <mat-form-field class="neon-shadow" >
+                                <mat-label>Fecha Final</mat-label>
+                                <input matInput [matDatepicker]="picker2" formControlName="txtFecha" #txtFecha   >
+                                <mat-hint>MM/DD/YYYY</mat-hint>
+                                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                               </mat-form-field>
+                         
+                          
+                               <div class="row text-center" *ngIf= "!this.ObligaOpciones(formQuestion.get('selectTipo')?.value)" >
+                                   <div > 
+                                        <button mat-raised-button color="accent" [disabled]="formQuestion.invalid" type="submit">
+                                       <i class="fas fa-hamburger fa-xl efecto-spin"></i>&nbsp;&nbsp;Guardar</button>
+                                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        
+                                        <button mat-raised-button color="basic"   [disabled]="formQuestion.invalid"   
+                                      style="color: rgb(253, 250, 253); background-color:#b76e2e96;" (click)="cleanForm()" >
+                                      <i class="fa fa-broom fa-xl efecto-slide" ></i>&nbsp;&nbsp;Limpiar</button>   
+                                   </div>
+                               </div>
+                           </form> 
+               
+                        </div>
+                      
+                    </mat-expansion-panel>
+                    </ng-container>
+                </mat-accordion>
+               
+        </div>
+    </div>
+    <div class="row">
+        
+    
+     <!-- <pre>{{formQuestion.value | json}}</pre>  -->
+    </div>
+</div>

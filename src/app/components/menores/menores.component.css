@@ -1,0 +1,57 @@
+
+/* ── Fondo principal ────────────────────────────────── */
+.menores-bg {
+  position: relative;
+  isolation: isolate;
+}
+
+.menores-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('/assets/camping.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: rgba(255, 255, 255, 0.20);
+  background-blend-mode: overlay;
+  z-index: -1;
+}
+
+ .efecto-big {transition: all 0.5s ease; color:rgb(73, 64, 134); }
+
+ .efecto-big:hover {transform: scale(1); font-size: x-large; color:darkolivegreen; }
+
+
+ .efecto-spin {transition: all 0.5s ease; color: white; }
+
+ .efecto-spin:hover {transform: rotate(45deg) scale(1.4); color: rgb(203, 224, 143);}
+
+
+ .neon-shadow {  filter:   drop-shadow(5px 5px 2px gray) ;    transition: all 0.3s ease; }
+
+/* Efecto hover: intensificar el brillo */
+.neon-shadow:hover { filter:drop-shadow(5px 5px 3px gray)  drop-shadow(5px 5px 5px rgb(168, 167, 167));  }
+
+
+.card {/* horizontal, vertical, blur, color */
+   transition: all 0.4s ease; box-shadow: 5px 5px 2px gray;}
+
+
+/* ── Alert + botón menores en línea ─────────────────── */
+.menores-alert-row {
+  display: flex;
+  align-items:flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+
+/* ── Banner "Menores de Edad": cristal transparente (fondo y refracción vía .lg-clear) ── */
+.menores-banner {
+  position: relative;
+  margin: 4px 0 6px;
+  padding: 10px 14px;
+  border-radius: 24px;
+}
+.menores-banner h3 { margin: 0; }

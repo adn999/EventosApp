@@ -1,0 +1,113 @@
+<app-navbar></app-navbar>
+
+
+<div class="eats-bg"></div>
+
+
+    <div class="row" [@mostrarTriggerCollapse]="estado" >
+        <div class="col-md-12">
+         <div class="text-center"></div>
+         <mat-toolbar color="primary"  style=" background-color:rgb(94, 139, 165);  font-size:x-large;"  >
+          <span>Alimentos Evento</span>
+          &nbsp;&nbsp;&nbsp;
+          <img class="rounded" src="../../../assets/logoScout.png" width="60" height="60">
+          </mat-toolbar>
+         <br>
+        </div>
+    </div>
+
+
+<div class="d-flex justify-content-center align-items-center">
+
+
+  <div class="row mx-0 w-100" >
+
+    <div class="col-12">
+    <h6 class="text-center">
+        <mat-icon matPrefix style="color: purple;" >restaurant</mat-icon>
+        Registrar Comida </h6>   <br>        
+    <app-modo-captura clave="registro-comida" [(modo)]="modoCaptura"></app-modo-captura>
+    <form [formGroup]="formRegistro" (ngSubmit)="saveItem()" >
+        
+        <div class="campo-escaner">
+        <mat-form-field  style="width:100%; max-width:240px;" [@mostrarTrigger]="estado" class="neon-shadow"  [subscriptSizing]="modoCaptura==='camara' ? 'dynamic' : 'fixed'">
+            <mat-icon matPrefix style="color: purple;" >edit_note</mat-icon>
+            <input matInput placeholder="Pulsera" type="text" #txtPulsera formControlName="txtPulsera"  maxlength="10" minlength="10"
+                   [readonly]="modoCaptura==='camara'" [attr.inputmode]="modoCaptura==='camara' ? 'none' : null" >
+             <mat-error *ngIf="formRegistro.get('txtPulsera')?.hasError('minlength')">
+                <mat-icon>warning_amber</mat-icon> Debe ser un valor válido 
+             </mat-error> 
+        </mat-form-field>
+        <app-boton-escaner *ngIf="modoCaptura==='camara'" etiqueta="Escaneo continuo" titulo="Comida · escaneo continuo" [procesar]="procesarContinuo"></app-boton-escaner>
+        </div>
+       
+    <div [hidden]="nombreEvento.length==0"  [@triggResult]="nombreEvento.length>0" >
+      <br>
+
+      <table class="table table-borderless table-striped tabla-datos" style="background-color:palevioletred;">
+        <thead> </thead>
+        <tbody>
+         <tr>
+           <td rowspan="2" style="text-align: center;">   
+              <br>
+              <label  class="form label alert alert-success" style="color: white;" *ngIf="avisoTipoPulsera.length>0"
+              [ngStyle]="{'background-color': colorTipoPulsera}" > {{ avisoTipoPulsera }}</label>
+           </td>
+           <td>
+              <label [ngClass]="this.itemToEdit.idComida_Evento==0?'form label alert alert-warning':'form label alert alert-success'"  > 
+              <span *ngIf="this.itemToEdit.idComida_Evento>0  "> <mat-icon>restaurant</mat-icon>&nbsp; SI cuenta con esta comida! </span>  
+              <span *ngIf="this.itemToEdit.idComida_Evento==0  "> <mat-icon>restaurant</mat-icon>&nbsp; NO cuenta con esta comida! </span>  
+              </label> 
+           </td>
+           <td>  <label  [ngClass]="this.validacionGral!? 'form label alert alert-success':'form label alert alert-warning'"
+                  > {{ avisoPulsera }}</label>
+           </td>
+         </tr>
+         <tr>
+            <td> 
+              <label  [ngClass]="this.nombreEvento.length>0 && this.validacionGral!? 'form label alert alert-success':'form label alert alert-primary'"
+                > &#x2022;<b>Pulsera:</b> {{ lblPulsera }} <br>
+                  &#x2022;<b>CUM:</b> {{lblCUM}}<br>
+                  &#x2022;<b>Nombre:</b>{{lblNombre}}</label>
+              
+            </td>
+            <td colspan="2">
+              <table 
+              class="table table-sm table-striped table-hover tabla-eventos"  style="width:80%"   >
+               <tbody>
+                  <tr><th>Evento(s):</th></tr>
+                  <tr *ngFor="let item of  arrEventos ">
+                      <td  >  <label  *ngIf="nombreEvento.length>0" style="font-size: small;" >{{item}}  </label></td>
+                  </tr> 
+               </tbody>
+              </table> 
+            </td>
+          </tr>
+         
+        </tbody>
+      </table>
+  </div>
+
+
+         <div class="row text-center"  [@mostrarTriggerLeft]="estado"> 
+            <div class="fila-botones">
+                 <button mat-raised-button style="color:white; " color="accent" [disabled]="formRegistro.invalid" type="submit"  >
+                <i class="fas fa-drumstick-bite efecto-spin" ></i>&nbsp;Registrar</button>
+                  <button mat-raised-button color="basic"   #btnLimpiar 
+                   style="color: rgb(255, 255, 255);  background-color:#b76e2e96;" (click)="cleanForm()" >
+                <i class="fa fa-broom efecto-slide" ></i>&nbsp;Limpiar Pantalla</button>         
+            </div>
+         </div>  
+    </form>  
+
+    </div>
+
+  </div> 
+ 
+
+
+ 
+<!--   <div class="row">
+    {{formRegistro.value | json}}
+  </div>
+ -->

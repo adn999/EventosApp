@@ -1,0 +1,56 @@
+<div  [ngClass]="isAnswered==false ? 'sector1': 'sector2' " >
+<ng-container *ngIf="isAnswered==false; else templateFull">
+<div  class="container" >
+
+<div class="row">
+    <div class="col mt-2 mb-0 mx-2">
+    <table style="height: 100px; width:100%;">
+        <tbody>
+          <tr>
+            <td class="align-middle"> <h4 class="" >
+              <!-- Hola {{ usuario.nombre| titlecase }}                 -->
+            </h4>
+            <span style="font-size:medium;"> Por favor, regálanos un minuto de tu tiempo para conocer tu opinión 
+              </span>
+            </td>
+            <td style="text-align: left;"  >
+                <img class="rounded" src="../../../assets/LogoScouts.png" width="200" height="100">
+            </td>
+          </tr>
+        </tbody>
+      </table><br>
+    </div>
+</div>
+<div class="row">
+  <div class="col mt-1  mx-1">
+   <!--   <table class="table table-bordered table-striped table-hover">
+      <tr *ngFor="let item of arrayPreguntas| orderByImpure 'idOrderasdfasfd' "><td>{{item.id}}</td><td>{{item.texto}}</td></tr> 
+    </table> -->   
+      <!-- *ngFor="let item of arrReactivos | orderBy: 'id'    " -->
+    <app-question  *ngFor="let item of arrReactivos | orderBy: 'idOrder' "
+       [objReactivo]="item"  [cum]="idUsuarioTest"
+       (preguntaEvent)="Muestra($event)" ></app-question> 
+  </div>
+</div>
+</div>
+
+<div   style="text-align: center; " >
+    <button *ngIf="this.cuestinarioValido" class="btn btn-success" (click)="onClickSubmit();" >
+    <li class="fa fa-paper-plane fa-lg"></li>&nbsp;&nbsp; Enviar
+    </button>
+</div>
+
+</ng-container>
+
+   
+<ng-template #templateFull >
+  <br/><br/>
+  <div class="mx-auto alert alert-info"   
+  style="text-align: center; vertical-align:middle; margin-top:0px; " >
+  
+    <li class="fa fa-flag-checkered fa-2xl"></li>&nbsp;
+      Gracias por tu participación el cuestionario ya fue completado exitosamente
+  </div><br/>
+</ng-template>
+
+</div>

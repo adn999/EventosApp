@@ -1,0 +1,107 @@
+<app-navbar></app-navbar>
+    <div class="row" [@mostrarTriggerCollapse]="estado" >
+      <div class="col-md-12">
+       <div class="text-center"></div>
+       <mat-toolbar color="primary"  style=" background-color:rgb(94, 139, 165);  font-size:x-large;"  >
+        <div  >
+        <span> Kit - Foods</span>
+             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <img class="rounded" src="../../../assets/logoScout.png" width="60" height="60"   >
+        </div>
+       </mat-toolbar>
+       <br>
+      </div>
+  </div>
+  <div class="col-md-12"     >
+    <h6 class="text-center">
+      <mat-icon style="color:purple">style</mat-icon>&nbsp; <mat-icon style="color:purple">restaurant</mat-icon>&nbsp;
+        Escanea la Pulsera para consultar sus entregas   </h6>         
+   </div>
+
+
+<div  [ngClass]="isAnswered==false ? 'sector1': 'sector2' " >
+    <ng-container >
+    <div  class="container" >
+    
+
+    <div class="row"  >
+      <div class="col mt-1  mx-1">
+        
+        <form #loginForm="ngForm" (ngSubmit)="onLogin();"  >
+          <div class="row">
+            <div class="col-md-6"  [@mostrarTrigger]="estado">
+               <div class="form-floating mb-3">
+                <input type="text" maxlength="10" minlength="10" class="form-control"  placeholder="ingrese su Pulsera" 
+                [(ngModel)]="Pulsera" required  name="txtPulsera" id="txtPulsera"  #txtPulsera >
+                <label>Tu Pulsera aquí...</label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <button mat-raised-button style="color:white; " color="primary"   [disabled]="this.Pulsera.length<10"  type="submit"  >
+             <mat-icon>search</mat-icon>Consultar</button>
+            </div>
+            <div class="col-md-2">
+              <button mat-raised-button color="basic" type="button" style="color: purple;" (click)="cleanForm()" [@mostrarTriggerLeft]="estado" >
+              <mat-icon>cleaning_services</mat-icon>Limpiar</button>      
+            </div>
+         </div>
+       
+
+
+         <table  *ngIf="avisoPulsera.length>0" class="table table-sm table-responsive" style="background-color:palevioletred; font-size: small;">
+          <thead> </thead>
+          <tbody>
+           <tr >
+             <td rowspan="2" style="text-align: center;"> 
+              <img [src]="imagePath" class="img-thumbnail rounded" width="100" height="100" >             
+             </td>       
+             <td>  <label  class="form label alert alert-success" style="color: white;" *ngIf="avisoTipoPulsera.length>0"
+              [ngStyle]="{'background-color': colorTipoPulsera}" > {{ avisoTipoPulsera }}</label>
+             </td> 
+             <td>   <label *ngIf="this.itemToEdit.idEvento>0" 
+               [ngClass]="this.itemToEdit.idEvento ==0? 'form label alert alert-wargning':'form label alert alert-success'"
+                   > {{ this.avisoPulsera }}</label>  
+             </td> 
+           </tr>
+           <tr>
+              <td> 
+                <label   [ngClass]="this.lblNombre.length>0!? 'form label alert alert-primary':'form label alert alert-primary'"
+                > &#x2022;<b>Pulsera:</b> {{ lblPulsera }} <br> &#x2022;<b>Nombre:</b>{{lblNombre}}</label>       
+              </td>
+              <td colspan="2">
+                <table 
+                class="table table-sm table-striped table-hover"  style="width:80%;"   >
+                 <tbody>
+                    <tr><th>Evento(s):</th></tr>
+                    <tr *ngFor="let item of  arrEventos ">
+                        <td> <label *ngIf="nombreEvento.length>0" style="font-size: small;" >{{item}}</label></td>
+                    </tr> 
+                 </tbody>
+                </table> 
+              </td>
+            </tr>       
+          </tbody>
+        </table>
+
+        </form>
+      </div>
+    </div>
+    
+
+
+    <div class="row">
+      <div class="col mt-1  mx-1">
+       <!--   <table class="table table-bordered table-striped table-hover">
+          <tr *ngFor="let item of arrayPreguntas "><td>{{item.id}}</td><td>{{item.texto}}</td></tr> 
+        </table> -->   
+          <!-- *ngFor="let item of arrReactivos | orderBy: 'id'    " -->
+        <app-question  *ngFor="let item of arrReactivos | orderBy: 'idOrder' "  [objReactivo]="item"  [cum]="this.itemToEdit.cum"
+           (preguntaEvent)="Muestra($event)" ></app-question> 
+      </div>
+    </div>
+    </div>
+  
+    </ng-container>
+    
+    
+    </div>
