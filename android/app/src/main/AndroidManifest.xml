@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,6 +28,15 @@
                 <data android:scheme="eventosscouts" />
             </intent-filter>
         </activity>
+
+        <!-- Destino de los atajos del icono (shortcuts.xml): reenvía el enlace sin recrear MainActivity -->
+        <activity
+            android:name=".AtajoActivity"
+            android:exported="true"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <receiver android:name=".AccesosWidgetProvider" android:exported="false">
             <intent-filter>
@@ -65,4 +75,6 @@
     <!-- Escaneo continuo (CodigoBarrasPlugin); la lectura de un solo código usa el escáner de Google y no lo necesita -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <!-- Lo agrega @capacitor/local-notifications; Google Play lo restringe a apps de alarma/calendario. Sin él, los recordatorios usan alarmas inexactas -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" tools:node="remove" />
 </manifest>

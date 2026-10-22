@@ -89,17 +89,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
     // y la mitad en horizontal, y el tamaño del mosaico se ajusta para que quepan todos junto a "Más" y "Salir".
     // Si quedarían demasiado pequeños, los últimos pasan a "Más".
     if (!this.esTablet) {
-      const android = Capacitor.getPlatform() === 'android';
       const op = (ruta: string) => this.opcionesTabbar.find(o => o.ruta === ruta)!;
-      const lista = android
-        ? ['/home', '/RegistroEvento', '/ConsultaPulsera', '/Kit', '/Salud', '/Kpis']
-        : ['/home', '/RegistroEvento', '/ConsultaPulsera', '/Kit', '/Kpis'];      // en iPhone Salud va en "Más"
-      const horizontal = window.innerWidth > window.innerHeight;
+      const lista = ['/home', '/RegistroEvento', '/ConsultaPulsera', '/Kit', '/Kpis'];   // Salud va en "Más"
+      // clientWidth: ancho visible. innerWidth crece si algo de la página se desborda (p. ej. un .row de Bootstrap
+      // fuera de .container en Consulta) y el dock se calculaba más ancho que la pantalla
+      const ancho = document.documentElement.clientWidth || window.innerWidth;
+      const horizontal = ancho > window.innerHeight;
       let n = lista.length, tile = 46;
       const medir = () => {
         const huecos = n + 2;                                  // iconos + "Más" + "Salir"
         // vertical: de borde a borde; horizontal: la mitad del ancho. Mosaicos lo más grandes posible (máx. 54 px)
-        const anchoDock = horizontal ? window.innerWidth / 2 : window.innerWidth - 12;
+        const anchoDock = horizontal ? ancho / 2 : ancho - 12;
         tile = Math.min(54, Math.floor((anchoDock - 20 - (huecos - 1) * 6) / huecos));
       };
       medir();
@@ -113,7 +113,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.salirEnDock = true;
       this.mostrarMas = true;
       this.dockItems = lista.slice(0, n).map(op);
-      this.panelItems = [...lista.slice(n).map(op), ...(android ? [] : [op('/Salud')]), ...this.opcionesMas];
+      this.panelItems = [...lista.slice(n).map(op), op('/Salud'), ...this.opcionesMas];
       return;
     }
     // Tableta: los iconos principales que quepan a lo ancho (mosaico 56 + separación 10), luego "Más" y "Salir"

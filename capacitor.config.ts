@@ -10,6 +10,8 @@ const config: CapacitorConfig = {
     // Las llamadas HTTP de Angular (HttpClient/XHR) se hacen de forma nativa,
     // así la API https://apis.scouts.org.mx no bloquea por CORS dentro de la app.
     CapacitorHttp: { enabled: true },
+    // Android: index.html ya declara viewport-fit=cover (de borde a borde); avisarlo de entrada evita el salto al arrancar
+    SystemBars: { initialViewportFitValueHint: 'cover' },
   },
 };
 

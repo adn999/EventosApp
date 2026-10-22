@@ -175,7 +175,7 @@
 
 <!-- Overlay de video de salida -->
 <div *ngIf="showExitVideo" class="exit-video-overlay">
-  <video #exitVid autoplay playsinline
+  <video #exitVid autoplay playsinline poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
          class="exit-video" [class.exit-fading]="isExitFading"
          (timeupdate)="onExitVideoTimeUpdate(exitVid)"
          (ended)="onExitVideoEnded()">

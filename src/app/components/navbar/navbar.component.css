@@ -216,6 +216,9 @@ color: purple;}
 :host-context(.es-android) .tabbar-telefono {
   bottom: calc(6px + max(env(safe-area-inset-bottom), var(--safe-area-inset-bottom, 0px)));
 }
+/* Android: el "salto" al tocar se queda dentro del dock (con el salto completo el mosaico se salía del borde,
+   y el WebView a veces deja pegado :active tras cambiar de pantalla) */
+:host-context(.es-android) .tab:active { transform: translateY(-2px) scale(1.08); }
 :host-context(.es-android) .mas-panel {
   padding-bottom: calc(94px + max(env(safe-area-inset-bottom), var(--safe-area-inset-bottom, 0px)));
 }

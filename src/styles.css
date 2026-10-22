@@ -63,6 +63,10 @@ html.es-tablet body.con-tabbar { padding-bottom: calc(102px + env(safe-area-inse
 html.es-android body.con-tabbar { padding-bottom: calc(88px + max(env(safe-area-inset-bottom), var(--safe-area-inset-bottom, 0px))); }
 html.es-android.es-tablet body.con-tabbar { padding-bottom: calc(102px + max(env(safe-area-inset-bottom), var(--safe-area-inset-bottom, 0px))); }
 
+/* Teléfono: nada se desborda a lo ancho. Un .row de Bootstrap fuera de .container (márgenes de -12px) ensanchaba
+   la página más que la pantalla: se podía arrastrar de lado y el dock fijo se salía por la derecha */
+html.es-telefono, html.es-telefono body { overflow-x: clip; }
+
 /* Teléfono: sin cápsula superior, el contenido baja lo que mida el área segura (reloj / Dynamic Island) */
 html.es-telefono body.con-tabbar { padding-top: calc(env(safe-area-inset-top) + 8px); }
 
