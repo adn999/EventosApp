@@ -70,7 +70,7 @@
                 <li class="fa fa-cut efecto-spin" style="color:rgb(87, 33, 6)" ></li>&nbsp;&nbsp;Reposición
             </a>
           </li>
-         <li class="nav-item">
+         <li class="nav-item" *ngIf="kpisVisible">
             <a class="nav-link" title="Indicadores" routerLinkActive="active" routerLink="/Kpis" (click)="playAudio('click')"  >
                 <li class="fa fa-chart-pie efecto-spin" style="color:rgb(42, 165, 187)" ></li>&nbsp;&nbsp;KPIs
             </a>

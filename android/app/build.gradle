@@ -14,8 +14,8 @@ android {
         applicationId "mx.org.scouts.eventos"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // Solo librerías nativas para teléfonos ARM (el escáner ML Kit trae ~12 MB extra para emuladores x86).
         // Para probar en el emulador de Android Studio, agregar 'x86_64' temporalmente.

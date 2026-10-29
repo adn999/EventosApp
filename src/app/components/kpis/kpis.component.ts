@@ -18,6 +18,7 @@ import { NotificacionesService } from 'src/app/services/notificaciones.service';
 import { reporteDiaDBModel } from 'src/app/models/reporteDiaDBModel';
 import { reporteConteoComidasDBModel } from 'src/app/models/reporteConteoComidasDBModel';
 import { reporteRankingStaffAlimentosDBModel } from 'src/app/models/reporteRankingStaffAlimentosDBModel';
+import { puedeVerKpis } from 'src/app/services/permisos';
 
 
 @Component({
@@ -72,6 +73,9 @@ export class KpisComponent implements OnInit {
   macroEvento:string='';
   localUser!:VistaLoginModel;
   localUsercargo:string='';
+
+  //cargos con acceso al módulo de KPIs
+  get puedeVerKpis():boolean { return puedeVerKpis(this.localUsercargo); }
 
   arrDataPorcen: number[] = [];  
   arrLabelPorcen: string[] = [];
@@ -521,9 +525,16 @@ this.canvas2 = document.getElementById('myChart2');
      this.sharedSvc.currentCatalogosPermisos$.subscribe(respuesta=>
         { 
           this.localUsercargo=  respuesta.cargos;
-          //sólo el cargo  "ADMINISTRADOR SISAS" puede ver el botón para enviar sobres masivamente
-       
-         
+          if(!this.puedeVerKpis)
+          {
+            Swal.fire({
+              title: "No ha tiene permiso a este módulo", text:"Debes contactar a personal de ASMAC Nacional",
+              icon:"info",iconColor:'purple',color: '#purple',
+              background:'rgba(255, 255, 255, 0.87)',backdrop: `rgba(0,0,123,0.4)`,
+              showDenyButton: false,
+              confirmButtonText: 'Enterado',confirmButtonColor:'#CD6155'
+            }).then((result) => {if (result.isConfirmed) { this.router.navigate(['home' ] );} });
+          }
         });
   }
 

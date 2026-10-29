@@ -19,7 +19,7 @@ const minutos = (ms: number) => Math.round(ms / 60000);
 
 function avisarCierre(motivo: MotivoCierre): void {
   const texto = motivo === 'inactividad'
-    ? 'Pasaron más de 45 minutos sin usar la app. Vuelve a iniciar sesión para continuar.'
+    ? 'Pasaron más de 1 hora 15 minutos sin usar la app. Vuelve a iniciar sesión para continuar.'
     : 'Tu sesión expiró. Vuelve a iniciar sesión para continuar.';
   // En la app, alerta nativa del sistema (vidrio de iOS 27 / Material en Android); en el navegador, SweetAlert
   const nativa = () => Dialog.alert({ title: 'Se cerró tu sesión', message: texto, buttonTitle: 'Entendido' });

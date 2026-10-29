@@ -8,6 +8,7 @@ import { Capacitor } from '@capacitor/core';
 import { VistaLoginModel } from 'src/app/models/VistaLoginModel';
 import { ShareDataService } from 'src/app/services/shared-data.service';
 import { ResumenWidgetService } from 'src/app/services/resumen-widget.service';
+import { puedeVerKpis } from 'src/app/services/permisos';
 import { transition, trigger, useAnimation } from '@angular/animations';
 import {  transitionRotateRight, transitionRotateLeft } from '../animation';
 
@@ -46,7 +47,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
   };
   private escuchaNativa?: Promise<PluginListenerHandle>;
   private navSub?: Subscription;
-  readonly opcionesTabbar = [
+  private permisosSub?: Subscription;
+
+  // KPIs solo se muestra a los cargos con permiso (el cargo puede llegar después, al restaurar la sesión)
+  kpisVisible = false;
+  get opcionesTabbar() { return this.kpisVisible ? this.todasTabbar : this.todasTabbar.filter(o => o.ruta !== '/Kpis'); }
+  // Pestañas principales en teléfono (Salud va en "Más")
+  private get principalesTelefono(): string[] {
+    return ['/home', '/RegistroEvento', '/ConsultaPulsera', '/Kit', '/Kpis'].filter(r => this.opcionesTabbar.some(o => o.ruta === r));
+  }
+  private readonly todasTabbar = [
     { texto:'Inicio',   ruta:'/home',            icono:'fa-campground', color:'rgb(73, 64, 134)' },
     { texto:'Registro', ruta:'/RegistroEvento',  icono:'fa-feather',    color:'rgb(78, 97, 41)' },
     { texto:'Consulta', ruta:'/ConsultaPulsera', icono:'fa-binoculars', color:'rgb(89, 192, 171)' },
@@ -90,7 +100,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     // Si quedarían demasiado pequeños, los últimos pasan a "Más".
     if (!this.esTablet) {
       const op = (ruta: string) => this.opcionesTabbar.find(o => o.ruta === ruta)!;
-      const lista = ['/home', '/RegistroEvento', '/ConsultaPulsera', '/Kit', '/Kpis'];   // Salud va en "Más"
+      const lista = this.principalesTelefono;
       // clientWidth: ancho visible. innerWidth crece si algo de la página se desborda (p. ej. un .row de Bootstrap
       // fuera de .container en Consulta) y el dock se calculaba más ancho que la pantalla
       const ancho = document.documentElement.clientWidth || window.innerWidth;
@@ -159,7 +169,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     // Menores, Protección, Reporte PM y Comida horario/evento siempre en "Más" en iPad.
     const op = (ruta: string) => this.opcionesTabbar.find(o => o.ruta === ruta)!;
     const principales = this.esTablet ? [...this.opcionesTabbar, ...this.opcionesMas.slice(0, 3)]
-      : ['/home', '/RegistroEvento', '/ConsultaPulsera', '/Kit', '/Kpis'].map(op);
+      : this.principalesTelefono.map(op);
     const n = this.esTablet ? 7 : 5;
     const fijas = this.opcionesMas.slice(3);
     const resto = this.esTablet ? [...principales.slice(n), ...fijas]
@@ -202,6 +212,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
 ngOnInit(): void {
   this.sharedSvc.currentStatu$.subscribe(respuesta=>{this.localUser=respuesta;});
+  this.permisosSub = this.sharedSvc.currentCatalogosPermisos$.subscribe(respuesta=>{
+    const visible = puedeVerKpis(respuesta.cargos);
+    if (visible === this.kpisVisible) return;
+    this.kpisVisible = visible;
+    this.calcularDock();
+    if (NavbarComponent.esIOS && NavbarComponent.nativo) this.mostrarNativa();
+  });
   this.calcularDock();
   if (this.esTelefono && ++NavbarComponent.instancias === 1) document.body.classList.add('con-tabbar');
   if (NavbarComponent.esIOS) {
@@ -219,6 +236,7 @@ ngOnDestroy(): void {
   // Cada página trae su propio navbar: la clase se quita solo cuando ya no queda ninguno
   if (this.esTelefono && --NavbarComponent.instancias === 0) document.body.classList.remove('con-tabbar');
   this.navSub?.unsubscribe();
+  this.permisosSub?.unsubscribe();
   this.escuchaNativa?.then(h => h.remove());
   this.escuchaAncho?.then(h => h.remove());
   // Cada página trae su navbar: se oculta la barra nativa solo si, tras el cambio de página, no quedó ninguno

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Capacitor, PluginListenerHandle } from '@capacitor/core';
 import { App } from '@capacitor/app';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { puedeVerKpis } from './permisos';
 
 const ID_SESION = 801;        // aviso: la sesión está por cerrarse por inactividad
 const ID_RESUMEN_AM = 802;    // aviso diario de la mañana (KPIs)
@@ -10,18 +11,19 @@ const ID_RESUMEN_PM = 803;    // aviso diario de la noche (KPIs)
 const ID_KPIS = 804;          // resumen de KPIs que se reemplaza en cada actualización (se refleja en relojes con la app del reloj)
 const ID_HITO = 805;          // aviso por hito de asistencia
 const HITOS = [25, 50, 75, 100];   // % de asistencia sobre registros
-const MIN_INACTIVIDAD = 45;   // AUTO_LOGOUT_INTERVAL_WAIT (43) + AUTO_LOGOUT_AVISO_ESPERA (2) de ShareDataService
-const MIN_AVISO = 43;         // se avisa 2 min antes
+const MIN_INACTIVIDAD = 75;   // AUTO_LOGOUT_INTERVAL_WAIT (73) + AUTO_LOGOUT_AVISO_ESPERA (2) de ShareDataService
+const MIN_AVISO = 73;         // se avisa 2 min antes
 const HORA_RESUMEN_AM = 9;    // 9:00 am
 const HORA_RESUMEN_PM = 21;   // 9:00 pm
 const ESTATUS_FIN = 15;       // idEstatusEvento >= 15: el evento ya no está vigente
 
 /**
  * Notificaciones locales (no necesitan servidor), solo en la app nativa y con la sesión iniciada:
- *  - Sesión por caducar: si la app pasa a segundo plano se programa un aviso para los 43 min desde la última actividad
- *    (en segundo plano la app no corre). Al volver, ShareDataService revisa el tiempo y cierra la sesión si ya pasaron 45 min.
+ *  - Sesión por caducar: si la app pasa a segundo plano se programa un aviso para los 73 min desde la última actividad
+ *    (en segundo plano la app no corre). Al volver, ShareDataService revisa el tiempo y cierra la sesión si ya pasaron 75 min.
  *  - Resumen del día: recordatorios diarios a las 9 am y 9 pm que abren la pantalla de KPIs, solo mientras el
  *    evento elegido esté vigente (idEstatusEvento < 15). Se programan o cancelan cada vez que se cargan sus permisos.
+ *  Los avisos de KPIs (resumen del día, resumen por hora e hitos) solo se programan si el cargo puede ver KPIs.
  */
 @Injectable({ providedIn: 'root' })
 export class NotificacionesService {
@@ -30,6 +32,9 @@ export class NotificacionesService {
   private ultimaActividad: () => number = () => Date.now();
   private escuchas: Promise<PluginListenerHandle>[] = [];
   private ultimaHoraResumen = '';   // hora del reloj (fecha + hora) en que se publicó el último resumen
+  // cargo y estatus del evento llegan en peticiones distintas y en cualquier orden: se guardan y se decide con ambos
+  private cargo = '';
+  private estatusEvento: number | null = null;
 
   constructor(private readonly router: Router) {}
 
@@ -43,6 +48,7 @@ export class NotificacionesService {
       this.permiso = permiso.display === 'granted';
       await this.limpiarObsoletas();
     } catch { /* sin permiso: la app funciona igual, solo sin avisos */ }
+    await this.revisarResumen();   // por si el cargo o el evento llegaron antes de tener el permiso
 
     this.escuchas = [
       LocalNotifications.addListener('localNotificationActionPerformed', e => {
@@ -63,6 +69,8 @@ export class NotificacionesService {
     await Promise.all(escuchas.map(async h => (await h).remove()));
     try { await LocalNotifications.cancel({ notifications: [{ id: ID_SESION }, { id: ID_RESUMEN_AM }, { id: ID_RESUMEN_PM }, { id: ID_KPIS }, { id: ID_HITO }] }); } catch { /* nada */ }
     this.ultimaHoraResumen = '';
+    this.cargo = '';
+    this.estatusEvento = null;
   }
 
   /** Cancela avisos que dejó programados una versión anterior de la app (cualquier id que no sea de los actuales). */
@@ -75,10 +83,25 @@ export class NotificacionesService {
 
   /** Se llama con el estatus del evento elegido: programa los avisos diarios si está vigente y los cancela si no. */
   async actualizarResumen(idEstatusEvento: number): Promise<void> {
+    this.estatusEvento = idEstatusEvento;
+    await this.revisarResumen();
+  }
+
+  /** Se llama con el cargo del usuario: sin permiso de KPIs se cancelan sus avisos. */
+  async actualizarCargo(cargo: string): Promise<void> {
+    this.cargo = cargo ?? '';
+    await this.revisarResumen();
+  }
+
+  private async revisarResumen(): Promise<void> {
     if (!Capacitor.isNativePlatform() || !this.activo || !this.permiso) return;
     try {
-      if (idEstatusEvento < ESTATUS_FIN) await this.programarResumen();
-      else await LocalNotifications.cancel({ notifications: [{ id: ID_RESUMEN_AM }, { id: ID_RESUMEN_PM }] });
+      if (!puedeVerKpis(this.cargo)) {
+        await LocalNotifications.cancel({ notifications: [{ id: ID_RESUMEN_AM }, { id: ID_RESUMEN_PM }, { id: ID_KPIS }, { id: ID_HITO }] });
+      } else if (this.estatusEvento !== null) {
+        if (this.estatusEvento < ESTATUS_FIN) await this.programarResumen();
+        else await LocalNotifications.cancel({ notifications: [{ id: ID_RESUMEN_AM }, { id: ID_RESUMEN_PM }] });
+      }
     } catch { /* nada */ }
   }
 
@@ -90,7 +113,7 @@ export class NotificacionesService {
    * Solo se llama con la app abierta: sin servidor de push el sistema no la deja actualizar en segundo plano.
    */
   async publicarKpis(macro: string, k: { asistencia: number; registros: number; kitEntregados: number; kitIncluye: number; comidasEntregadas: number }, forzar = false): Promise<void> {
-    if (!Capacitor.isNativePlatform() || !this.activo || !this.permiso) return;
+    if (!Capacitor.isNativePlatform() || !this.activo || !this.permiso || !puedeVerKpis(this.cargo)) return;
     const n = (v: number) => v.toLocaleString('es-MX');
     const texto = `Asistencia ${n(k.asistencia)} de ${n(k.registros)} · Kits ${n(k.kitEntregados)} de ${n(k.kitIncluye)} · Comidas ${n(k.comidasEntregadas)}`;
     const ahora = new Date();

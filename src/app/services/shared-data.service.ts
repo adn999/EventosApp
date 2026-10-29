@@ -28,8 +28,8 @@ export class ShareDataService {
 
 
   minutesToMilliseconds = (minutes: number) => minutes * 60000;
-  AUTO_LOGOUT_INTERVAL_WAIT = this.minutesToMilliseconds(43);//minutos de inactividad antes de advertir (la sesión se cierra a los 45)
-  AUTO_LOGOUT_AVISO_ESPERA = this.minutesToMilliseconds(2);//tiempo para responder al aviso: 43 + 2 = 45 min
+  AUTO_LOGOUT_INTERVAL_WAIT = this.minutesToMilliseconds(73);//minutos de inactividad antes de advertir (la sesión se cierra a los 75)
+  AUTO_LOGOUT_AVISO_ESPERA = this.minutesToMilliseconds(2);//tiempo para responder al aviso: 73 + 2 = 75 min (1 h 15 min)
   readonly LIMITE_INACTIVIDAD = this.AUTO_LOGOUT_INTERVAL_WAIT + this.AUTO_LOGOUT_AVISO_ESPERA;
 
   // La inactividad se mide con la hora de la última interacción (no con un temporizador que corre), así sigue siendo
@@ -118,7 +118,7 @@ export class ShareDataService {
    //observable para los permisos de catalogos
    private CatalogosPermisos$= new BehaviorSubject<VistaConsultaMiembros>(userCatalogosPermisos);
    get currentCatalogosPermisos$():Observable<VistaConsultaMiembros> { return this.CatalogosPermisos$.asObservable();  }
-   setCatalogosPermisos(item:VistaConsultaMiembros):void { this.CatalogosPermisos$.next(item);} 
+   setCatalogosPermisos(item:VistaConsultaMiembros):void { this.CatalogosPermisos$.next(item); this.notifs.actualizarCargo(item.cargos);} 
 
 
 
