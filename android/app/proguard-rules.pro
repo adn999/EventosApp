@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 -renamesourcefileattribute SourceFile
+
+# Capacitor lee por reflexión las anotaciones @CapacitorPlugin/@Permission. Sin estas reglas, R8 (modo completo)
+# supone que PluginHandle.getPluginAnnotation() siempre es null y elimina la lectura de permisos: checkPermissions()
+# devuelve vacío en todos los plugins y CodigoBarras.iniciarContinuo se queda sin responder (v1.0.1).
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+-keep @interface com.getcapacitor.annotation.** { *; }
+-keep class com.getcapacitor.** { *; }
+
+# Plugins y widgets locales de la app (CodigoBarrasPlugin, ResumenWidgetPlugin, ...)
+-keep class mx.org.scouts.eventos.** { *; }
