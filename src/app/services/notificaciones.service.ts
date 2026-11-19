@@ -5,6 +5,10 @@ import { App } from '@capacitor/app';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { puedeVerKpis } from './permisos';
 
+// Todas las notificaciones se programan con isExactNotification:false. El manifest quita SCHEDULE_EXACT_ALARM
+// (Google Play lo restringe) y, desde @capacitor/local-notifications 8.3, si no se indica, cada schedule() abre la
+// pantalla "Alarmas y recordatorios" de Android, cuyo permiso nunca se puede conceder. Los avisos usan alarmas inexactas.
+
 const ID_SESION = 801;        // aviso: la sesión está por cerrarse por inactividad
 const ID_RESUMEN_AM = 802;    // aviso diario de la mañana (KPIs)
 const ID_RESUMEN_PM = 803;    // aviso diario de la noche (KPIs)
@@ -122,7 +126,7 @@ export class NotificacionesService {
     try {
       if (forzar || hora !== this.ultimaHoraResumen) {
         this.ultimaHoraResumen = hora;
-        await LocalNotifications.schedule({ notifications: [{ id: ID_KPIS, title: macro || 'Eventos Scouts', body: texto, schedule: pronto(), extra: { ruta: '/Kpis' } }] });
+        await LocalNotifications.schedule({ notifications: [{ id: ID_KPIS, title: macro || 'Eventos Scouts', body: texto, schedule: pronto(), extra: { ruta: '/Kpis' }, isExactNotification: false }] });
       }
       const pct = k.registros > 0 ? Math.floor(k.asistencia * 100 / k.registros) : 0;
       const hito = Math.max(0, ...HITOS.filter(h => pct >= h));
@@ -131,14 +135,14 @@ export class NotificacionesService {
       if (previo === null) { localStorage.setItem(clave, String(hito)); return; }
       if (hito > Number(previo)) {
         localStorage.setItem(clave, String(hito));
-        await LocalNotifications.schedule({ notifications: [{ id: ID_HITO, title: `Asistencia al ${hito} %`, body: texto, schedule: pronto(), extra: { ruta: '/Kpis' } }] });
+        await LocalNotifications.schedule({ notifications: [{ id: ID_HITO, title: `Asistencia al ${hito} %`, body: texto, schedule: pronto(), extra: { ruta: '/Kpis' }, isExactNotification: false }] });
       }
     } catch { /* sin permiso o sin almacenamiento */ }
   }
 
   private async programarResumen(): Promise<void> {
     const aviso = (id: number, hour: number, title: string, body: string) => ({
-      id, title, body, schedule: { on: { hour, minute: 0 }, allowWhileIdle: true }, extra: { ruta: '/Kpis' },
+      id, title, body, schedule: { on: { hour, minute: 0 }, allowWhileIdle: true }, extra: { ruta: '/Kpis' }, isExactNotification: false,
     });
     await LocalNotifications.schedule({ notifications: [
       aviso(ID_RESUMEN_AM, HORA_RESUMEN_AM, 'Buenos días', 'Revisa los indicadores del evento: asistencia, kits y comidas.'),
@@ -155,6 +159,7 @@ export class NotificacionesService {
         title: 'Tu sesión está por cerrarse',
         body: `Por inactividad se cerrará en ${MIN_INACTIVIDAD - MIN_AVISO} min. Abre la app para continuar.`,
         schedule: { at: new Date(avisoEn), allowWhileIdle: true },
+        isExactNotification: false,
       }] });
     } catch { /* sin permiso */ }
   }

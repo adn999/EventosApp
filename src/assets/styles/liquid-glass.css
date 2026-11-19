@@ -819,6 +819,131 @@
 .swal2-input, .swal2-textarea, .swal2-select { border-radius: 14px !important; }
 
 /* ---------------------------------------------------------------------
+   14. TÍTULOS DE MÓDULO: barra de cristal transparente + texto en degradado
+   (va después de la sección 2 para reemplazar el vidrio esmerilado de mat-toolbar;
+    la refracción la agrega liquid-refraction.js)
+   --------------------------------------------------------------------- */
+.lg-scope .mat-toolbar {
+  --lg-refract-extra: blur(2px) saturate(170%) brightness(1.06);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.19), rgba(255, 255, 255, 0.05)) !important;
+  -webkit-backdrop-filter: blur(7px) saturate(170%);
+  backdrop-filter: blur(7px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  box-shadow:
+    inset 1.5px 1.5px 1px rgba(255, 255, 255, 0.85),
+    inset -1px -1px 1px rgba(255, 255, 255, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+    inset 0 0 22px rgba(255, 255, 255, 0.12),
+    0 12px 32px rgba(20, 15, 40, 0.18),
+    0 2px 6px rgba(20, 15, 40, 0.08);
+}
+
+/* Texto del título: degradado morado Scout → verde (colores del botón Ingresar del login).
+   Clase reutilizable .lg-title-gradient para títulos que no están en una barra. */
+.lg-scope .mat-toolbar span,
+.lg-title-gradient {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  background: linear-gradient(135deg, #3d0f6e 0%, #5a1a96 45%, #17775d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  text-shadow: none;   /* una sombra de texto se pintaría encima del degradado y lo lavaría */
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.85)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+}
+
+/* ---------------------------------------------------------------------
+   15. CRISTAL SIMULADO — donde no hay refracción (iPhone / Safari / Firefox)
+   liquid-refraction.js pone .lg-refraction en <html> sólo donde dobla el fondo
+   (Chrome, Edge, app de Android). En los demás se imita con CSS: fondo casi
+   nítido, brillo especular arriba, luz reflejada abajo, filo de luz y una
+   franja de color en los bordes (como la aberración cromática del lente).
+   --------------------------------------------------------------------- */
+html:not(.lg-refraction) :is(.lg-clear, .lg-scope .kpi-card, .lg-scope .mat-toolbar, .lg-scope .chart-card):not(table):not(.navbar) {
+  position: relative;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.03)) !important;
+  /* poco blur: el cristal transparente deja ver el fondo; saturación y brillo le dan el "lente" */
+  -webkit-backdrop-filter: blur(3px) saturate(210%) brightness(1.08) contrast(1.05);
+  backdrop-filter: blur(3px) saturate(210%) brightness(1.08) contrast(1.05);
+  border: 1px solid rgba(255, 255, 255, 0.42) !important;
+  box-shadow:
+    inset 0 1.5px 0.5px rgba(255, 255, 255, 0.95),            /* filo de luz superior */
+    inset 0 -1px 0.5px rgba(255, 255, 255, 0.50),             /* filo inferior */
+    inset 3px 0 4px -2px rgba(255, 70, 140, 0.22),            /* franja rosa a la izquierda */
+    inset -3px 0 4px -2px rgba(40, 170, 255, 0.24),           /* franja azul a la derecha */
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 0 6px rgba(255, 255, 255, 0.30),                  /* el borde se aclara de forma gradual: grosor del vidrio */
+    inset 0 0 22px rgba(255, 255, 255, 0.14),
+    0 12px 32px rgba(20, 15, 40, 0.18),
+    0 2px 6px rgba(20, 15, 40, 0.08) !important;
+}
+html:not(.lg-refraction) :is(.lg-clear, .lg-scope .kpi-card, .lg-scope .mat-toolbar, .lg-scope .chart-card):not(table):not(.navbar)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    /* brillo especular: la luz entra por arriba a la izquierda */
+    radial-gradient(120% 60% at 18% -8%, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.06) 38%, rgba(255, 255, 255, 0) 60%),
+    /* luz reflejada que se junta en el borde inferior */
+    radial-gradient(80% 45% at 80% 108%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 70%);
+}
+/* Detrás del contenido: encima aclararía el texto. (backdrop-filter crea contexto de apilamiento,
+   así que z-index:-1 no se sale de la tarjeta.) Sin mix-blend-mode ni un segundo backdrop-filter:
+   en KPIs hay ~10 superficies y en el iPhone esas capas extra dejaban las gráficas (canvas) sin pintar. */
+html:not(.lg-refraction) :is(.lg-clear, .lg-scope .kpi-card, .lg-scope .mat-toolbar, .lg-scope .chart-card):not(table):not(.navbar)::after { z-index: -1; }
+
+/* ---------------------------------------------------------------------
+   16. REFRACCIÓN SOBRE UNA COPIA DEL FONDO (iPhone / Safari)
+   liquid-refraction.js mete en cada superficie con foto detrás una copia de la
+   foto alineada (.lg-copia): una base casi nítida y, en el borde, otra copia
+   ampliada (el lente). La copia sustituye al backdrop-filter de la sección 15.
+   --------------------------------------------------------------------- */
+html .lg-con-copia {
+  isolation: isolate;                 /* la copia (z-index:-1) se queda dentro de la tarjeta */
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02)) !important;
+}
+.lg-copia {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+.lg-copia-img {
+  position: absolute;
+  inset: 0;
+  /* el fondo a través del cristal: casi nítido, más vivo y luminoso */
+  -webkit-filter: blur(1.5px) saturate(175%) brightness(1.07);
+  filter: blur(1.5px) saturate(175%) brightness(1.07);
+}
+/* Lente: copia ampliada visible sólo en una banda junto al borde que se desvanece hacia adentro
+   (cuatro degradados unidos: sin filo duro como el de la banda anterior) */
+.lg-copia-borde {
+  position: absolute;
+  inset: 0;
+  --lg-banda: 16px;
+  -webkit-mask-image:
+    linear-gradient(to right,  #000 0, transparent var(--lg-banda)),
+    linear-gradient(to left,   #000 0, transparent var(--lg-banda)),
+    linear-gradient(to bottom, #000 0, transparent var(--lg-banda)),
+    linear-gradient(to top,    #000 0, transparent var(--lg-banda));
+  mask-image:
+    linear-gradient(to right,  #000 0, transparent var(--lg-banda)),
+    linear-gradient(to left,   #000 0, transparent var(--lg-banda)),
+    linear-gradient(to bottom, #000 0, transparent var(--lg-banda)),
+    linear-gradient(to top,    #000 0, transparent var(--lg-banda));
+}
+.lg-copia-borde .lg-copia-img {
+  -webkit-filter: blur(0.8px) saturate(200%) brightness(1.14);
+  filter: blur(0.8px) saturate(200%) brightness(1.14);
+}
+
+/* ---------------------------------------------------------------------
    Accesibilidad y compatibilidad
    --------------------------------------------------------------------- */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

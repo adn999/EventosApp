@@ -61,6 +61,7 @@ struct BotonActualizar: View {
         Button(intent: ActualizarKpisIntent()) {
             Image(systemName: "arrow.clockwise").font(.system(size: 11, weight: .bold))
                 .foregroundStyle(morado)
+                .widgetAccentable()
                 .frame(width: 24, height: 24)
                 .background(.white.opacity(0.55), in: Circle())
         }
@@ -111,8 +112,10 @@ struct Indicador: View {
                 Circle().trim(from: 0, to: avance)
                     .stroke(color, style: StrokeStyle(lineWidth: 6, lineCap: .round))
                     .rotationEffect(.degrees(-90))
+                    .widgetAccentable()
                 Text(valor.formatted()).font(.system(size: 17, weight: .bold, design: .rounded)).foregroundStyle(color)
                     .minimumScaleFactor(0.5).lineLimit(1).padding(.horizontal, 5)
+                    .widgetAccentable()
             }
             .frame(width: 52, height: 52)
             if let total = total {
@@ -160,6 +163,7 @@ struct BotonAcceso: View {
         Link(destination: URL(string: url)!) {
             HStack(spacing: 6) {
                 Image(systemName: icono).font(.system(size: 17, weight: .semibold)).foregroundStyle(color)
+                    .widgetAccentable()
                 Text(titulo).font(.system(size: 13, weight: .semibold)).foregroundStyle(.primary)
                     .minimumScaleFactor(0.8).lineLimit(1)
             }
@@ -169,11 +173,20 @@ struct BotonAcceso: View {
     }
 }
 
+extension Image {
+    /// Apariencias Transparente / Tintado de iOS (modo acentuado): el logo se pinta desaturado sobre el cristal
+    /// en lugar de quedar como una mancha de color.
+    func logoAcentuado() -> some View {
+        if #available(iOS 18.0, *) { return AnyView(self.widgetAccentedRenderingMode(.desaturated)) }
+        return AnyView(self)
+    }
+}
+
 /// Logo scout (PNG suelto dentro de la extensión del widget).
 struct LogoScout: View {
     var body: some View {
         if let ruta = Bundle.main.path(forResource: "logoScout", ofType: "png"), let img = UIImage(contentsOfFile: ruta) {
-            Image(uiImage: img).resizable().scaledToFit()
+            Image(uiImage: img).resizable().logoAcentuado().scaledToFit()
         }
     }
 }
@@ -305,9 +318,9 @@ struct PantallaBloqueoActividad: View {
 
     private func columna(_ titulo: String, _ valor: Int, _ total: Int?) -> some View {
         VStack(spacing: 1) {
-            Text(titulo).font(.system(size: 12, weight: .medium)).opacity(0.8)
+            Text(titulo).font(.system(size: 12, weight: .medium)).foregroundStyle(.white.opacity(0.8))
             Text(valor.formatted()).font(.system(size: 26, weight: .bold, design: .rounded)).minimumScaleFactor(0.6).lineLimit(1)
-            Text(total.map { "de \($0.formatted())" } ?? " ").font(.system(size: 12)).opacity(0.8)
+            Text(total.map { "de \($0.formatted())" } ?? " ").font(.system(size: 12)).foregroundStyle(.white.opacity(0.8))
         }
         .frame(maxWidth: .infinity)
     }
@@ -321,7 +334,7 @@ struct PantallaBloqueoActividad: View {
                     .font(.system(size: 13, weight: .semibold)).lineLimit(1)
                 Spacer()
                 Text(contexto.isStale ? "desactualizado" : "actualizado \(e.actualizado, style: .time)")
-                    .font(.system(size: 11)).opacity(0.8)
+                    .font(.system(size: 11)).foregroundStyle(.white.opacity(0.8))
             }
             HStack {
                 columna("Asistencia", e.asistencia, e.registros)
@@ -330,6 +343,7 @@ struct PantallaBloqueoActividad: View {
             }
         }
         .foregroundStyle(.white)
+        .shadow(color: .black.opacity(0.35), radius: 3, y: 1)   // legible sobre cualquier fondo de pantalla
         .padding(14)
     }
 }
@@ -373,8 +387,10 @@ extension WidgetConfiguration {
 struct KpiLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: KpiActividad.self) { contexto in
+            // Tinte transparente: sin él iOS pinta su fondo blanco/negro opaco; con .clear se ve el fondo de pantalla
+            // a través de la tarjeta. El texto va en blanco con sombra, como el reloj de la pantalla de bloqueo.
             VistaActividad(contexto: contexto)
-                .activityBackgroundTint(morado.opacity(0.92))
+                .activityBackgroundTint(.clear)
                 .activitySystemActionForegroundColor(.white)
                 .widgetURL(URL(string: "eventosscouts://kpis"))
         } dynamicIsland: { contexto in
@@ -474,6 +490,7 @@ struct AvanceRectangular: View {
                     LineMark(x: .value("Bloque", p.id), y: .value("Registros", p.total)).interpolationMethod(.catmullRom)
                 }
                 .chartXAxis(.hidden).chartYAxis(.hidden)
+                .widgetAccentable()
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         } else {
@@ -509,6 +526,7 @@ struct VistaAvanceDia: View {
                 .chartYScale(domain: 0...(Int(Double(a.puntos.map(\.total).max() ?? 1) * 1.25) + 1))
                 .chartYAxis(.hidden)
                 .chartXAxis { AxisMarks { _ in AxisValueLabel().font(.system(size: 8)) } }
+                .widgetAccentable()
             }
         } else {
             Text("Abre la app para ver el avance por día").font(.system(size: 12)).foregroundStyle(.secondary)

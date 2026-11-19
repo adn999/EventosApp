@@ -62,19 +62,19 @@
 
   <!-- Grid de 4 gráficas -->
   <div class="charts-grid" [@mostrarTrigger]="estado">
-    <div class="chart-card "  *ngIf="this.conteoAsistencia > 0">
+    <div class="chart-card lg-clear "  *ngIf="this.conteoAsistencia > 0">
       <canvas id="chartAvanceKits"></canvas>
     </div>
-    <div class="chart-card "  *ngIf="this.conteoAsistencia > 0">
+    <div class="chart-card lg-clear "  *ngIf="this.conteoAsistencia > 0">
       <canvas id="chartAvance"></canvas>
     </div>
-    <div class="chart-card ">
+    <div class="chart-card lg-clear ">
       <canvas id="chartDocuSeal"></canvas>
     </div>
-    <div class="chart-card ">
+    <div class="chart-card lg-clear ">
       <canvas id="chartSinCelular"></canvas>
     </div>
-    <div class="chart-card "  *ngIf="this.conteoAsistencia > 0" >
+    <div class="chart-card lg-clear "  *ngIf="this.conteoAsistencia > 0" >
       <canvas id="chartColores" ></canvas>
     </div>
   </div>
@@ -83,7 +83,7 @@
 
 <!-- Gráfica por Día — ancho completo de la página -->
 <div class="chart-dia-section" *ngIf="this.conteoAsistencia > 0"  >
-  <div class="chart-card " style="border-color: #a5219a;">
+  <div class="chart-card lg-clear " style="border-color: #a5219a;">
     <canvas id="chartDia"></canvas>
   </div>
 </div>
@@ -94,22 +94,22 @@
 <div class="ranking-row" *ngIf="this.conteoAsistencia > 0">
   <div class="ranking-table-col">
     <h5>Ranking de Staff Registro</h5>
-    <table id="tblRankingStaffRegistro" class="table table-striped table-hover table-sm">
+    <table id="tblRankingStaffRegistro" class="table table-striped table-hover table-sm lg-clear">
       <thead><tr><th>CUM</th><th>Nombre</th><th>Conteo</th></tr></thead>
       <tbody>
         <tr *ngFor="let item of reporteRankingStaffRegistro">
           <td class="conteo-cell">
             <span *ngIf="+item.conteo === maxConteo(reporteRankingStaffRegistro)" class="trophy">🏆</span>
-            <textarea rows="1" class="form-control" style="font-size:small;" disabled>{{item.cum}}</textarea>
+            <span class="form-control celda-ranking celda-cum">{{item.cum}}</span>
           </td>
-          <td><textarea rows="1" class="form-control" style="font-size:small;" disabled>{{item.nombre}}</textarea></td>
-          <td><textarea rows="1" class="form-control" style="font-size:small;" disabled>{{item.conteo}}</textarea></td>
+          <td><span class="form-control celda-ranking">{{item.nombre}}</span></td>
+          <td><span class="form-control celda-ranking">{{item.conteo}}</span></td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="ranking-chart-col">
-    <div class="chart-card ranking-chart">
+    <div class="chart-card lg-clear ranking-chart">
       <canvas id="chartRankingRegistro"></canvas>
     </div>
   </div>
@@ -119,22 +119,22 @@
 <div class="ranking-row"  *ngIf="this.conteoAsistencia > 0" >
   <div class="ranking-table-col">
     <h5>Ranking de Staff Kit</h5>
-    <table id="tblRankingStaffKit" class="table table-striped table-hover table-sm">
+    <table id="tblRankingStaffKit" class="table table-striped table-hover table-sm lg-clear">
       <thead><tr><th>CUM</th><th>Nombre</th><th>Conteo</th></tr></thead>
       <tbody>
         <tr *ngFor="let item of reporteRankingStaffKit">
           <td class="conteo-cell">
             <span *ngIf="+item.conteo === maxConteo(reporteRankingStaffKit)" class="trophy">🏆</span>
-            <textarea rows="1" class="form-control" style="font-size:small;" disabled>{{item.cum}}</textarea>
+            <span class="form-control celda-ranking celda-cum">{{item.cum}}</span>
           </td>
-          <td><textarea rows="1" class="form-control" style="font-size:small;" disabled>{{item.nombre}}</textarea></td>
-          <td><textarea rows="1" class="form-control" style="font-size:small;" disabled>{{item.conteo}}</textarea></td>
+          <td><span class="form-control celda-ranking">{{item.nombre}}</span></td>
+          <td><span class="form-control celda-ranking">{{item.conteo}}</span></td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="ranking-chart-col">
-    <div class="chart-card ranking-chart">
+    <div class="chart-card lg-clear ranking-chart">
       <canvas id="chartRankingKit"></canvas>
     </div>
   </div>
@@ -144,22 +144,22 @@
 <div class="ranking-row"  *ngIf="this.conteoAsistencia > 0" >
   <div class="ranking-table-col">
     <h5>Ranking de Alimentos</h5>
-    <table id="tblRankingStaffAlimentos" class="table table-striped table-hover table-sm">
+    <table id="tblRankingStaffAlimentos" class="table table-striped table-hover table-sm lg-clear">
       <thead><tr><th>CUM</th><th>Nombre</th><th>Conteo</th></tr></thead>
       <tbody>
         <tr *ngFor="let item of reporteRankingStaffAlimentos">
           <td class="conteo-cell">
             <span *ngIf="+item.conteo === maxConteo(reporteRankingStaffAlimentos)" class="trophy">🏆</span>
-            <textarea rows="1" class="form-control" style="font-size:small;" disabled>{{item.cum}}</textarea>
+            <span class="form-control celda-ranking celda-cum">{{item.cum}}</span>
           </td>
-          <td><textarea rows="1" class="form-control" style="font-size:small;" disabled>{{item.nombre}}</textarea></td>
-          <td><textarea rows="1" class="form-control" style="font-size:small;" disabled>{{item.conteo}}</textarea></td>
+          <td><span class="form-control celda-ranking">{{item.nombre}}</span></td>
+          <td><span class="form-control celda-ranking">{{item.conteo}}</span></td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="ranking-chart-col">
-    <div class="chart-card ranking-chart">
+    <div class="chart-card lg-clear ranking-chart">
       <canvas id="chartRankingAlimentos"></canvas>
     </div>
   </div>

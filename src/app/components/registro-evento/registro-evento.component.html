@@ -82,6 +82,29 @@
          </tbody>
        </table>
 
+        <!-- Kit: sólo aparece si el evento del asistente incluye kit.
+             Si no hay kits disponibles se usa "Entregar después" y se entrega luego en el módulo de Kit -->
+        <div *ngIf="kitEstado" class="lg-glass kit-panel" [ngClass]="'kit-'+kitEstado">
+          <i class="fa-solid fa-box-open kit-icono"></i>
+          <div class="kit-texto">
+            <b>Su evento incluye Kit</b>
+            <span [ngSwitch]="kitEstado">
+              <ng-container *ngSwitchCase="'pendienteRegistro'">Al guardar la pulsera podrás entregarlo aquí.</ng-container>
+              <ng-container *ngSwitchCase="'listo'">Entrégalo ahora, o después en el módulo de Kit si no hay disponibles.</ng-container>
+              <ng-container *ngSwitchCase="'entregando'">Registrando la entrega…</ng-container>
+              <ng-container *ngSwitchCase="'entregado'">Kit entregado ✓</ng-container>
+              <ng-container *ngSwitchCase="'yaEntregado'">El kit ya fue entregado anteriormente.</ng-container>
+              <ng-container *ngSwitchCase="'sinPermiso'">No tienes permiso para entregar kits; se entrega en el módulo de Kit.</ng-container>
+            </span>
+          </div>
+          <div class="kit-acciones" *ngIf="kitEstado=='listo' || kitEstado=='entregando'">
+            <button type="button" class="lg-btn lg-btn--accent kit-boton" [disabled]="kitEstado=='entregando'" (click)="entregarKit()">
+              <i class="fa-solid fa-gift"></i> Entregar Kit</button>
+            <button type="button" class="lg-btn kit-boton" [disabled]="kitEstado=='entregando'" (click)="cleanForm()"
+                    title="Sin kits disponibles: queda pendiente para el módulo de Kit">
+              <i class="fa-solid fa-clock"></i> Entregar después</button>
+          </div>
+        </div>
 
   
         <div class="campo-escaner">

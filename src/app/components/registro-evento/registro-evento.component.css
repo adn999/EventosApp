@@ -35,3 +35,37 @@
 /* iPhone vertical: la animación de entrada (translateX) y los márgenes negativos de .row ensanchaban la página
    y Safari la desplazaba a la derecha dejando el formulario fuera de vista. Se recorta lo que sobresale a lo ancho. */
 :host { display: block; overflow-x: hidden; overflow-x: clip; }
+
+/* ── Kit en Registro (sólo si el evento del asistente incluye kit) ── */
+.kit-panel {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 14px;
+  padding: 12px 16px;
+  margin: 4px 0 14px;
+  border-radius: 20px;
+}
+.kit-icono {
+  font-size: 1.7rem;
+  color: rgb(101, 50, 124);
+}
+.kit-texto {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+.kit-texto span { font-size: 0.88rem; color: rgba(31, 22, 51, 0.72); }
+.kit-acciones { display: flex; flex-wrap: wrap; gap: 8px; }
+.kit-boton { min-height: 40px !important; padding: 4px 18px !important; font-size: 0.9rem; }
+
+/* Color del ícono según el estado */
+.kit-entregado .kit-icono, .kit-yaEntregado .kit-icono { color: rgb(31, 138, 112); }
+.kit-sinPermiso .kit-icono { color: rgb(176, 110, 0); }
+
+/* Celular: los botones ocupan el ancho */
+@media (max-width: 575.98px) {
+  .kit-acciones { width: 100%; }
+  .kit-boton { flex: 1; }
+}

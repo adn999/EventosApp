@@ -83,9 +83,10 @@ export class ConsultaPulseraComponent implements OnInit{
     this.alEscanear(valor);
   });
   private informar(r: ResultadoContinuo): void { this.reportar?.(r); }
-  /** CUM · kit · entrada y, en otra línea, sus eventos, para la tarjeta del escaneo continuo. */
-  private ficha(cum: string, kit: number): string {
-    return conEventos([cum, 'Kit: '+(kit==1?'Sí':'No'), this.avisoEntrasaSalida].filter(x => x).join(' · '), this.nombreEvento);
+  /** CUM · pulsera · kit · entrada y, en otra línea, sus eventos, para la tarjeta del escaneo continuo. */
+  private ficha(cum: string, pulsera: string, kit: number): string {
+    const txtPulsera = pulsera ? 'Pulsera: '+pulsera : 'Sin pulsera asignada';
+    return conEventos([cum, txtPulsera, 'Kit: '+(kit==1?'Sí':'No'), this.avisoEntrasaSalida].filter(x => x).join(' · '), this.nombreEvento);
   }
    
   constructor (private readonly dbSvc:DbservicesService,
@@ -207,7 +208,7 @@ ngOnInit(): void
                   
                     if(this.itemToEdit.entrada==1){this.avisoEntrasaSalida="Ingresó al Evento:"+ formatDate(this.itemToEdit.fechaEntrada, 'dd-MMM-YYYY HH:mm:ss','en-US');  }
                     else{this.avisoEntrasaSalida="Salió del Evento:"+formatDate(this.itemToEdit.fechaSalida, 'dd-MMM-YYYY HH:mm:ss', 'en-US');}
-                    this.informar({ tipo: 'ya', titulo: 'Baja por reposición · '+respB.nombre, detalle: this.ficha(respB.cum, respB.kit) });
+                    this.informar({ tipo: 'ya', titulo: 'Baja por reposición · '+respB.nombre, detalle: this.ficha(respB.cum, respB.pulsera, respB.kit) });
                     this.cleanForm();
                   }
                 });
@@ -261,7 +262,7 @@ ngOnInit(): void
                         }
                      });
 
-                     this.informar({ tipo: 'ok', titulo: resp.nombre, detalle: this.ficha(resp.cum, resp.kit) });
+                     this.informar({ tipo: 'ok', titulo: resp.nombre, detalle: this.ficha(resp.cum, resp.pulsera, resp.kit) });
                      this.playAudio("ok");
 
               }
@@ -274,14 +275,24 @@ ngOnInit(): void
             this.itemToEdit.pulsera='';
             this.validacionGral=false;
             this.formRegistro.patchValue({txtPulseraRef: '' });
-            this.toastr.success("Pulsera ya Registada!","El usuario ya tiene una pulsera asignada." );
             //al localizar por CUM, la entrada/salida viene en esta misma respuesta (antes se usaban valores viejos o los iniciales)
             this.itemToEdit.entrada=respPulsera.entrada;
             this.itemToEdit.fechaEntrada=respPulsera.fechaEntrada;
             this.itemToEdit.fechaSalida=respPulsera.fechaSalida;
-            const isKit=respPulsera.kit==1?'Sí':'No';     
-            this.avisopulsera="Pulsera asignada correctamente. Se entregó Kit:"+isKit;
-            this.lblPulsera=pulseraTemp;
+            const isKit=respPulsera.kit==1?'Sí':'No';
+            const tienePulsera= !!respPulsera.pulsera;
+            if(tienePulsera)
+            {
+              this.toastr.success("Pulsera ya Registada!","El usuario ya tiene una pulsera asignada." );
+              this.avisopulsera="Pulsera asignada correctamente. Se entregó Kit:"+isKit;
+            }
+            else
+            {
+              this.toastr.info("CUM localizado","El usuario aún no tiene pulsera asignada." );
+              this.avisopulsera="Aún no tiene pulsera asignada. Se entregó Kit:"+isKit;
+            }
+            //se buscó por CUM: la pulsera es la del registro, no el valor capturado (que es el CUM)
+            this.lblPulsera= tienePulsera ? respPulsera.pulsera : 'Sin pulsera asignada';
             this.lblCUM=respPulsera.cum;
             this.lblNombre=respPulsera.nombre ;
             this.imagePath='../../../assets/gifLogo.gif';
@@ -322,7 +333,7 @@ ngOnInit(): void
                     }
                  });
 
-                 this.informar({ tipo: 'ok', titulo: respPulsera.nombre, detalle: this.ficha(respPulsera.cum, respPulsera.kit) });
+                 this.informar({ tipo: 'ok', titulo: respPulsera.nombre, detalle: this.ficha(respPulsera.cum, respPulsera.pulsera, respPulsera.kit) });
                  this.playAudio("ok");
 
           }

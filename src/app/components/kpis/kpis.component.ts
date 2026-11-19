@@ -144,7 +144,15 @@ export class KpisComponent implements OnInit {
                private readonly toastr:ToastrService,    
                private readonly router: Router,
                private readonly notifSvc:NotificacionesService,
-     ){ }
+     )
+  {
+    //texto de las gráficas legible sobre el cristal transparente: morado oscuro y seminegrita
+    //(Chart.js usa por omisión un gris claro que se pierde sobre la foto de fondo)
+    Chart.defaults.color='#2a1a40';
+    Chart.defaults.font.weight=600;
+    Chart.defaults.borderColor='rgba(42, 26, 64, 0.14)';//líneas de la cuadrícula
+    Chart.defaults.plugins.title.font={ size: 14, weight: 700 };
+  }
 
 
 //para que cambie el estado de la variable inicial para animación
@@ -480,7 +488,8 @@ this.canvas2 = document.getElementById('myChart2');
     const chart = new Chart(canvas.getContext('2d')!, {
       type: 'bar',
       data: {
-        labels,
+        //nombre en dos líneas (nombre(s) / apellidos): en celular el nombre completo no cabía y se cortaba al inicio
+        labels: labels.map(n => this.nombreEnDosLineas(n)),
         datasets: [{ label: titulo, data, backgroundColor: color, borderWidth: 1 }]
       },
       options: {
@@ -489,11 +498,21 @@ this.canvas2 = document.getElementById('myChart2');
         maintainAspectRatio: false,
         animation: { duration: 900 },
         plugins: { legend: { display: false } },
-        scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
+        scales: { x: { beginAtZero: true, ticks: { precision: 0 } },
+                  //todas las etiquetas: con nombres en dos líneas Chart.js se saltaba la mitad
+                  y: { ticks: { autoSkip: false, font: { size: 11 } } } }
       }
     });
 
     this.chartRankingInstances.set(canvasId, chart);
+  }
+
+  /** "RAUL IGNACIO MONTES LOPEZ" → ["RAUL IGNACIO", "MONTES LOPEZ"] (Chart.js dibuja cada elemento en su línea). */
+  private nombreEnDosLineas(nombre: string): string | string[] {
+    const p = (nombre ?? '').trim().split(/\s+/);
+    if (p.length < 3) return nombre;
+    const corte = p.length - 2;   //los dos últimos son los apellidos
+    return [p.slice(0, corte).join(' '), p.slice(corte).join(' ')];
   }
 
   playAudio(sonido:string){

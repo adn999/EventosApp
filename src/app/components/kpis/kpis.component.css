@@ -63,7 +63,7 @@
   padding: 10px 20px 8px;
   flex: 1 1 120px;
   min-width: 120px;
-  height: 66px;
+  min-height: 66px;   /* mínimo, no fijo: en iPhone el texto sale más grande y la etiqueta quedaba cortada */
   display: flex;
   flex-direction: column;
   border-left: 4px solid;
@@ -87,6 +87,10 @@
   color: #6b7280;
   margin-top: 5px;
   line-height: 1.3;
+  /* en iPhone el texto sale más grande: "Alimentos Entregados" se salía de la tarjeta */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Liquid Glass: el color del indicador pasa del borde a un punto luminoso */
@@ -182,6 +186,34 @@
   100% { transform: scale(1)    rotate(   0deg); filter: drop-shadow(0 0 0px  #fbbf24); }
 }
 
+/* ── Celdas del ranking: pastilla de cristal (.form-control) que crece con el texto ──
+   (antes eran textarea de una línea y en celular cortaban el CUM y el nombre) */
+.celda-ranking {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: auto;
+  padding: 4px 10px;
+  font-size: small;
+  line-height: 1.3;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+/* el CUM se lee de corrido: nunca se parte, el que baja de línea es el nombre */
+.celda-cum { flex: 0 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Tablas de ranking: las tres columnas caben en el ancho del celular.
+   (En iPhone el texto sigue el tamaño de Ajustes y con el acolchado de 12×16 px la columna Conteo quedaba fuera.) */
+:host .ranking-table-col .table { table-layout: fixed; width: 100%; }
+:host .ranking-table-col .table > thead th:nth-child(1) { width: 38%; }
+:host .ranking-table-col .table > thead th:nth-child(2) { width: 42%; }
+:host .ranking-table-col .table > thead th:nth-child(3) { width: 20%; }
+:host .ranking-table-col .table > thead th,
+:host .ranking-table-col .table > tbody td { padding: 8px 5px; }
+:host .ranking-table-col .table > thead th { font-size: 11px; letter-spacing: 0.02em; }
+:host .ranking-table-col .celda-ranking { font-size: 12px; padding: 4px 8px; }
+:host .ranking-table-col .conteo-cell { min-width: 0; }
+
 /* ── Layout tabla + gráfica ranking ─────────────────── */
 .ranking-row {
   display: flex;
@@ -253,7 +285,22 @@
   padding: 10px 14px;
   border-radius: 24px;
 }
-.kpis-title { grid-column: 2; margin: 0; text-align: center; }
+.kpis-title {
+  grid-column: 2;
+  margin: 0;
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  /* degradado morado Scout → verde (los colores del botón Ingresar del login) en lugar del negro */
+  background: linear-gradient(135deg, #3d0f6e 0%, #5a1a96 45%, #17775d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* sin sombra de texto: la que hereda de .lg-clear se pinta encima del degradado y lo lava */
+  text-shadow: none;
+  /* filo blanco fino para que destaque sobre el cristal (reemplaza la sombra gris de neon-shadow) */
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.85)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+}
 .kpis-refresh {
   grid-column: 3;
   justify-self: end;
@@ -267,4 +314,23 @@
   height: 18px;
   font-size: 18px;
   color: rgb(101, 50, 124);
+}
+
+
+/* ── Gráficas y tablas de ranking: mismo cristal transparente que las tarjetas de cifras ──
+   (la refracción la agrega liquid-refraction.js por la clase .lg-clear;
+    :host da la especificidad para ganarle al vidrio esmerilado global) */
+:host .chart-card.lg-clear,
+:host .table.lg-clear:not(.table .table) {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.19), rgba(255, 255, 255, 0.05)) !important;
+  -webkit-backdrop-filter: blur(7px) saturate(170%);
+  backdrop-filter: blur(7px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
+  box-shadow:
+    inset 1.5px 1.5px 1px rgba(255, 255, 255, 0.85),
+    inset -1px -1px 1px rgba(255, 255, 255, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+    inset 0 0 22px rgba(255, 255, 255, 0.12),
+    0 12px 32px rgba(20, 15, 40, 0.18),
+    0 2px 6px rgba(20, 15, 40, 0.08) !important;
 }

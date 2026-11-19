@@ -53,6 +53,11 @@ export class RegistroEventoComponent implements OnInit {
   nombreEvento:string='';
 
   arrEventos: string[] = [];
+
+  //── Entrega de kit desde Registro: sólo si el evento del asistente incluye kit ──
+  incluyeKit=false;   //el evento del asistente incluye kit
+  permisoKit=false;   //el operador tiene permiso entregaKit en este evento
+  kitEstado:''|'pendienteRegistro'|'listo'|'entregando'|'entregado'|'yaEntregado'|'sinPermiso'='';
   
   imagePath:SafeResourceUrl='';
   
@@ -96,7 +101,10 @@ cleanForm():void{
       this.formRegistro.patchValue({txtPulsera:''  });
       this.idPaquete=0;
       this.nombreRegistro='';
-      this.itemToEdit.cum='';
+      this.itemToEdit={idEvento:0, macroEvento:'', cum:'', pulsera:'', nombre:'', nombreEvento:'', entrada:1,
+                       fechaEntrada: new Date(), fechaSalida:new Date('2000,1,1'), kit:0};
+      this.incluyeKit=false;
+      this.kitEstado='';
       this.avisopulsera='';
       this.avisoTipoPulsera='';
       this.colorTipoPulsera='';
@@ -137,6 +145,13 @@ ValidaValores():boolean
             this.nombreRegistro= this.itemToEdit.nombre;
             this.envelopeId= resp.envelopeStatus;
             this.imagePath='../../../assets/gifLogo.gif';
+
+            //¿su evento incluye kit? (mismo dato que usa el módulo de Kit)
+            this.incluyeKit= !!resp.incluyeKit && resp.idPaquete>0;
+            this.kitEstado= !this.incluyeKit ? ''
+                          : resp.kit ? 'yaEntregado'
+                          : !this.permisoKit ? 'sinPermiso'
+                          : 'pendienteRegistro';
 
               //se consulta imagen del usuario
               this.dbSvc.getImage(resp.cum, this.localUser.token, this.localUser.tokenjwt).subscribe(respObjGenerico=>
@@ -204,8 +219,21 @@ ValidaValores():boolean
                        //enfocará al cuadro de texto siguiente
                      setTimeout(() => {this.txtPulseraRef.nativeElement.focus() ; }, 250); 
                   }
+                  else if(this.kitEstado=='pendienteRegistro' && respu.kit!=1) //ya tiene pulsera pero no su kit: se puede entregar aquí
+                  {
+                    this.itemToEdit={...this.itemToEdit, ...respu};//registro completo, como en el módulo de Kit
+                    this.kitEstado='listo';
+                    this.toastr.info("Usuario ya registrado","Su kit está pendiente de entrega", { timeOut: 4000, closeButton:false, progressBar:true } ) ;
+                    this.playAudio("info");
+                    this.avisopulsera="La pulsera: "+respu.pulsera+" ya fue asignada. Su kit está pendiente.";
+                    this.nombreEvento=this.itemToEdit.nombreEvento;
+                    this.arrEventos = this.nombreEvento.split("|");
+                    this.validacionUsuario=false;
+                    this.formRegistro.patchValue({txtCum:''  });
+                  }
                   else //ya tiene pulsera, por lo que no se asignará nada
                   { 
+                    if(respu.kit==1 && this.incluyeKit){ this.kitEstado='yaEntregado'; }
                     this.createMsg('Usuario ya Registado!  El usuario ya tiene una pulsera asignada.');
                     this.formRegistro.patchValue({txtPulseraRef: this.itemToEdit.pulsera });
                     this.avisopulsera="La pulsera: "+this.itemToEdit.pulsera+" ya fue asignada al usuario :"+this.itemToEdit.nombre;
@@ -390,12 +418,17 @@ ValidaValores():boolean
      this.dbSvc.postRegistroEventoAsistencia(itemToEdit,this.localUser.token, this.localUser.tokenjwt).subscribe(data=>
       { 
       
+            //si su evento incluye kit, la pantalla se queda para entregarlo con el botón "Entregar Kit"
+            const kitPendiente= this.kitEstado=='pendienteRegistro';
+            if(kitPendiente){ this.kitEstado='listo'; this.avisopulsera='Pulsera '+itemToEdit.pulsera+' asignada correctamente.'; }
+
             Swal.fire({
                           title: "Registro Exitoso!",
-                          text: 'La pulsera se asignó de forma correcta!!!   Bienvenido  :) ',
+                          text: kitPendiente ? 'Pulsera asignada. Ahora entrega su kit :)'
+                                             : 'La pulsera se asignó de forma correcta!!!   Bienvenido  :) ',
                           timer: 2000, // 2000 milliseconds = 2 seconds
                           showConfirmButton: false ,// Optionally hide the confirmation button
-                          icon:'success',didClose: () => { this.txtPulseraRef.nativeElement.focus(); this.cleanForm(); }
+                          icon:'success',didClose: () => { if(!kitPendiente){ this.txtPulseraRef.nativeElement.focus(); this.cleanForm(); } }
                       });
           this.playAudio("info");
           this.formRegistro.reset();
@@ -406,6 +439,36 @@ ValidaValores():boolean
     }
 
 
+
+    //Entrega el kit desde Registro: mismas llamadas que el módulo de Kit
+    entregarKit():void
+    {
+      if(this.kitEstado!='listo'){ return; }
+      this.kitEstado='entregando';
+
+      const objetoAsisKit:asistenteDBModel={idPaquete:this.idPaquete, idUsuario:this.idUsuarioAregistrar, usuarioLista:this.localUser.idUsuario};
+      this.dbSvc.updateAsistenteKit(objetoAsisKit,this.localUser.token, this.localUser.tokenjwt).subscribe(()=>
+        { this.toastr.success("Kit Registrado en SISAS!","El usuario ya tiene su Kit actualizado.",{ timeOut: 3000, closeButton:true, progressBar:true } ) ; });
+
+      this.itemToEdit.kit=1;
+      this.dbSvc.postRegistroEventoAsistencia(this.itemToEdit,this.localUser.token, this.localUser.tokenjwt).subscribe({
+        next: ()=>
+        {
+          this.kitEstado='entregado';
+          this.playAudio("info");
+          Swal.fire({ title: "Kit Entregado!!!", text: 'Se ha entregado el Kit Exitosamente',
+                      timer: 2000, showConfirmButton: false, icon:'success',
+                      didClose: () => { this.cleanForm(); } });
+        },
+        error: ()=>
+        {
+          this.itemToEdit.kit=0;
+          this.kitEstado='listo';
+          vibrar('error');
+          this.createMsg('No se pudo registrar el kit. Intenta de nuevo o entrégalo en el módulo de Kit.');
+        }
+      });
+    }
 
     consultarLogStatus():void
     {
@@ -428,6 +491,7 @@ ValidaValores():boolean
             {
               this.sharedSvc.currentEventoPermisos$.subscribe(respuesta=>
                 { 
+                  this.permisoKit=!!respuesta.entregaKit;
                   if(!respuesta.asistencia)
                   {
                     Swal.fire({
